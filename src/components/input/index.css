@@ -1,0 +1,10 @@
+.input {
+  display: flex;
+  border-radius: 8px;
+  transition: border-color 0.35s;
+  background-color: var();
+}
+
+.input:hover {
+  border-color: var(--light-green);
+}

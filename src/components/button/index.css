@@ -1,0 +1,21 @@
+.button {
+  display: flex;
+  background-color: var(--dark-green);
+  border-radius: 8px; 
+  padding: 2px;
+  min-width: 150px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: border-color 0.35s;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.button:hover{
+  background-color: var(--mid-green);
+  border-color: var(--indigo);
+}
