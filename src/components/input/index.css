@@ -1,8 +1,10 @@
 .input {
-  display: flex;
+  display: block;
+  width: 100%;
+  background-color: var(--input-bg);
   border-radius: 8px;
   transition: border-color 0.35s;
-  background-color: var();
+  padding: 8px;
 }
 
 .input:hover {
