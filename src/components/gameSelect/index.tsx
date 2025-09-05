@@ -1,6 +1,7 @@
 import type React from "react";
-import './index.css'
 import type { Host } from "../../types";
+import {Box} from "@mui/material"
+import { useTheme, type Theme } from "@mui/material/styles";
 
 type SelectProps = {
   values: Host[]
@@ -9,13 +10,53 @@ type SelectProps = {
 }
 
 export const GameSelect: React.FC<SelectProps> = (props) => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+
   return (
-    <div className="select">
+    <Box component='div' sx={styles.select}>
       {props.values.map((host) => (
-        <div key={host.address} className="option">
+        <Box
+          component='div'
+          key={host.address}
+          sx={{
+            ...styles.option,
+            "&:hover": styles.optionHover,
+          }}
+          onClick={() => props.setSelectedvalue(host.address)}
+        >
           {host.name} [{host.address}]
-        </div>
+        </Box>
       ))}
-    </div>
-  )
-}
+    </Box>
+  );
+};
+
+const getStyles = (theme: Theme) => ({
+  select: {
+    display: "flex",
+    position: "relative",
+    flexDirection: "column",
+    boxSizing: "border-box",
+    width: "192px",
+    borderRadius: "8px",
+    backgroundColor: theme.palette.custom.input,
+  },
+  option: {
+    cursor: "pointer",
+    backgroundColor: theme.palette.custom.input,
+    color: theme.palette.text.primary,
+    textAlign: "center",
+    borderRadius: "8px",
+    borderWidth: "2px",
+    borderStyle: "solid",
+    borderColor: theme.palette.custom.input,
+    transition: "border-color 0.35s",
+    padding: "4px",
+  },
+  optionHover: {
+    backgroundColor: theme.palette.custom.inputHover,
+    color: theme.palette.text.primary,
+    borderColor: theme.palette.success.main,
+  },
+});
