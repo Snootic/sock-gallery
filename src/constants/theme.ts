@@ -1,10 +1,10 @@
-import { createTheme, type ThemeOptions } from "@mui/material/styles";
+import { createTheme, type ThemeOptions, type Theme } from "@mui/material/styles";
 
 const commonSettings: ThemeOptions = {
     components: {
         MuiButton: {
             styleOverrides: {
-                root: ({ theme }) => ({
+                root: ({ theme }: { theme: Theme }) => ({
                     background: `linear-gradient(130deg, ${theme.palette.primary.main} 40%, ${theme.palette.secondary.main} 60%)`,
                     boxShadow:
                         "0 2px 8px rgba(0, 0, 0, 0.18), 0 0 24px 4px rgba(0,255,255,0.12)",
@@ -27,7 +27,7 @@ const commonSettings: ThemeOptions = {
         },
         MuiInputBase: {
             styleOverrides: {
-                root: ({ theme }) => ({
+                root: ({ theme }: { theme: Theme }) => ({
                     background: theme.palette.custom.input,
                     color: theme.palette.text.primary,
                     borderRadius: "8px",
@@ -53,6 +53,7 @@ export const getTheme = (mode: "light" | "dark") => {
             background: {
               default: "#242424",
               paper: "#2f4f4f",
+              deepGreen: "#035338",
             },
             custom: {
               input: "#1c2b2bff",
