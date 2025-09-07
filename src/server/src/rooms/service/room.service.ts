@@ -29,7 +29,7 @@ export class RoomService {
     const room: Room = {
       id: roomId,
       name: roomName,
-      host: host,
+      host: { id: host.id },
       players: [{ id: host.id }]
     }
 
@@ -50,6 +50,37 @@ export class RoomService {
     room.players.push({id: player.id})
 
     await this.repository.save(room.id, room)
+
+    return room
+  }
+
+  async findPeerRoom(player: Socket): Promise<Room | null> {
+    const rooms = await this.repository.getAll()
+
+    for (const room of rooms) {
+      if (room.players.some((p: Room['host']) => p.id === player.id)) {
+        return room;
+      }
+    }
+
+    return null;
+  }
+
+  async removePlayer(player: Socket, room: Room) {
+    let idx = room.players.length
+
+    while (idx--) {
+      if (room.players[idx].id === player.id) {
+        room.players.splice(idx, 1);
+        break;
+      }
+    }
+
+    if (room.players.length < 1) {
+      await this.repository.remove(room.id)
+    } else {
+      await this.repository.save(room.id, room)
+    }
 
     return room
   }
