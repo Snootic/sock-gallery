@@ -32,6 +32,10 @@ function App() {
       path: '/gallery',
       element: <Gallery />,
     },
+    {
+      path: '/gallery/:roomId',
+      element: <Gallery />,
+    },
   ])
 
   return (

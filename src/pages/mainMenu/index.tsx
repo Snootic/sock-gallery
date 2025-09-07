@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Button, InputBase, Box } from "@mui/material";
 import { GameSelect } from "../../components";
-import type { Host } from "../../types";
+import type { Room } from "../../types";
 import { useTheme, type Theme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
@@ -18,18 +18,26 @@ export default function MainMenu() {
   const theme = useTheme();
   const styles = getStyles(theme)
 
-  const [games, setGames] = React.useState<Host[]>([]);
+  const [games, setGames] = React.useState<Room[]>([]);
   const [selectedGame, setSelectedGame] = React.useState<
-    Host["address"] | undefined
+    Room["id"] | undefined
   >(undefined);
 
-  React.useEffect(() => {
-    setGames([
-      { address: "host1", name: "Gallery One" },
-      { address: "host2", name: "Gallery Two" },
-      { address: "host3", name: "Gallery Three" },
-    ]);
-  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/rooms")
+      .then(res => res.json())
+      .then(data => Array.isArray(data) ? setGames(data) : setGames([]))
+      .catch(() => setGames([]));
+  }, [])
+
+  const handleJoinRoom = () => {
+    if (!host) {
+      return null
+    }
+
+    navigate(`/gallery/${host}`)
+  }
 
   return (
     <Box component="main" sx={styles.main}>
@@ -68,11 +76,11 @@ export default function MainMenu() {
               <InputBase
                 placeholder="Game Code"
                 value={host}
-                onChange={(e) => setHost(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHost(e.target.value)}
               />
               <Button
                 variant="contained"
-                onClick={() => null}
+                onClick={() => handleJoinRoom()}
                 sx={{ width: "35%" }}
               >
                 Join
@@ -100,7 +108,8 @@ const getStyles = (theme: Theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: theme.palette.background.paper,
+    background: `linear-gradient(160deg, ${theme.palette.background.paper} 20%, ${theme.palette.background.deepGreen} 90%)`,
+    backdropFilter: 'blur(100px)',
     gap: "10px",
   },
   main: {
