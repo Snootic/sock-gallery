@@ -45,4 +45,12 @@ export class RoomService {
   async getAllRooms(): Promise<Room[]> {
     return this.repository.getAll()
   }
+
+  async setPlayer(player: Socket, room: Room) {
+    room.players.push({id: player.id})
+
+    await this.repository.save(room.id, room)
+
+    return room
+  }
 }

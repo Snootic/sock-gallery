@@ -1,4 +1,4 @@
-import { Server as SocketIOServer } from 'socket.io';
+import { Socket, Server as SocketIOServer } from 'socket.io';
 import http from 'http';
 import { RoomService } from '../rooms/service/room.service';
 
@@ -18,22 +18,11 @@ export class IOServer {
   init() {
     this.io.on('connection', (socket) => {      
       socket.on('create-room', async (roomName: string) => {
-        const room = await this.roomService.createRoom(roomName, socket);
-        socket.join(room.id);
-        socket.emit('room-created', { room });
+        await this.handleCreateRoom(socket, roomName)
       });
 
       socket.on('join-room', async (roomId: string) => {
-        const room = await this.roomService.getRoom(roomId);
-
-        if (!room) {
-          return socket.emit('not-found', {roomId})
-        }
-
-        socket.join(roomId);
-        socket.to(roomId).emit('user-joined', { userId: socket.id });
-        socket.emit('joined-room', { room });
-        
+        await this.handleJoinRoom(socket, roomId)
       });
 
       socket.on('offer', ({ target, caller, sdp }) => {
@@ -50,4 +39,23 @@ export class IOServer {
     });
   }
 
+  private async handleCreateRoom(socket: Socket, roomName: string) {
+    const room = await this.roomService.createRoom(roomName, socket);
+    socket.join(room.id);
+    socket.emit('room-created', { room });
+  }
+
+  private async handleJoinRoom(socket: Socket, roomId: string) {
+    let room = await this.roomService.getRoom(roomId);
+
+    if (!room) {
+      return socket.emit('not-found', {roomId})
+    }
+
+    socket.join(roomId);
+    room = await this.roomService.setPlayer(socket, room);
+    socket.to(roomId).emit('user-joined', { userId: socket.id });
+
+    return socket.emit('joined-room', { room });
+  }
 }
