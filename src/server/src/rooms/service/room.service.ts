@@ -38,11 +38,11 @@ export class RoomService {
     return room;
   }
 
-  async getRoom(roomId: string) {
-    return this.repository.getById(roomId)
+  async getRoom(roomId: string): Promise<Room | null> {
+    return await this.repository.getById(roomId);
   }
 
-  async getAllRooms() {
+  async getAllRooms(): Promise<Room[]> {
     return this.repository.getAll()
   }
 }
