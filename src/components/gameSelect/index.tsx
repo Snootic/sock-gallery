@@ -1,12 +1,12 @@
 import type React from "react";
-import type { Host } from "../../types";
+import type { Room } from "../../types";
 import {Box} from "@mui/material"
 import { useTheme, type Theme } from "@mui/material/styles";
 
 type SelectProps = {
-  values: Host[]
-  selectedValue: Host['address'] | undefined
-  setSelectedvalue: React.Dispatch<React.SetStateAction<Host['address'] | undefined>>
+  values: Room[]
+  selectedValue: Room['id'] | undefined
+  setSelectedvalue: React.Dispatch<React.SetStateAction<Room['id'] | undefined>>
 }
 
 export const GameSelect: React.FC<SelectProps> = (props) => {
@@ -18,14 +18,14 @@ export const GameSelect: React.FC<SelectProps> = (props) => {
       {props.values.map((host) => (
         <Box
           component='div'
-          key={host.address}
+          key={host.id}
           sx={{
             ...styles.option,
             "&:hover": styles.optionHover,
           }}
-          onClick={() => props.setSelectedvalue(host.address)}
+          onClick={() => props.setSelectedvalue(host.id)}
         >
-          {host.name} [{host.address}]
+          {host.name} [{host.id}]
         </Box>
       ))}
     </Box>

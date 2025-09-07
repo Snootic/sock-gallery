@@ -1,5 +1,7 @@
-import type { Host } from "./host";
+import type { Room } from "./room"
+import type { Player } from "./player"
 
 export type {
-  Host
+  Room,
+  Player
 }
