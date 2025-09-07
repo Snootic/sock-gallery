@@ -5,8 +5,13 @@
     { "path": "../../tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "moduleResolution": "node",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@types": ["../types/index"]
+    }
   }
 }
