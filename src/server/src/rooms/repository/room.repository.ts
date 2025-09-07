@@ -26,4 +26,8 @@ export class RoomRepository {
     return data ? JSON.parse(data) : null;
   }
 
+  async remove(roomId: string): Promise<void> {
+    await this.client.del([roomId]);
+  }
+
 }

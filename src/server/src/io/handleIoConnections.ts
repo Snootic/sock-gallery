@@ -25,6 +25,10 @@ export class IOServer {
         await this.handleJoinRoom(socket, roomId)
       });
 
+      socket.on('disconnect', async () => {
+        await this.handleDisconnection(socket);
+      });
+
       socket.on('offer', ({ target, caller, sdp }) => {
         this.io.to(target).emit('offer', { caller, sdp });
       });
@@ -56,6 +60,19 @@ export class IOServer {
     room = await this.roomService.setPlayer(socket, room);
     socket.to(roomId).emit('user-joined', { userId: socket.id });
 
+    return socket.emit('joined-room', { room });
+  }
+
+  private async handleDisconnection(socket: Socket) {
+    let room = await this.roomService.findPeerRoom(socket);
+
+    if (!room) {
+      return socket.emit('not-found-peer', { userId: socket.id })
+    }
+    socket.leave(room.id);
+    room = await this.roomService.removePlayer(socket, room);
+    socket.to(room.id).emit('user-disconnected', { userId: socket.id });
+    
     return socket.emit('joined-room', { room });
   }
 }
