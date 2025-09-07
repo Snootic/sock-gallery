@@ -29,7 +29,7 @@ export class RoomService {
     const room: Room = {
       id: roomId,
       name: roomName,
-      hostId: host.id,
+      host: host,
       players: [{ id: host.id }]
     }
 
