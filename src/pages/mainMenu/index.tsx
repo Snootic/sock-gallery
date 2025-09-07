@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 export default function MainMenu() {
   const [showRoomsVisible, setShowRoomsVisible] = React.useState(false);
   const [host, setHost] = React.useState<string>("");
-
+  const [games, setGames] = React.useState<Room[]>([]);
+  const [selectedGame, setSelectedGame] = React.useState<Room["id"] | undefined>(undefined);
   const navigate = useNavigate();
 
   const handleShowRooms = () => {
@@ -18,11 +19,16 @@ export default function MainMenu() {
   const theme = useTheme();
   const styles = getStyles(theme)
 
-  const [games, setGames] = React.useState<Room[]>([]);
-  const [selectedGame, setSelectedGame] = React.useState<
-    Room["id"] | undefined
-  >(undefined);
+  const handleJoinRoom = () => {
+    if (!host && !selectedGame) {
+      console.log("NONE")
+      return null
+    }
 
+    console.log(selectedGame)
+
+    navigate(`/gallery/${host || selectedGame}`)
+  }
 
   useEffect(() => {
     fetch("http://localhost:3001/rooms")
@@ -31,13 +37,9 @@ export default function MainMenu() {
       .catch(() => setGames([]));
   }, [])
 
-  const handleJoinRoom = () => {
-    if (!host) {
-      return null
-    }
-
-    navigate(`/gallery/${host}`)
-  }
+  useEffect(() => {
+    handleJoinRoom()
+  }, [selectedGame])
 
   return (
     <Box component="main" sx={styles.main}>

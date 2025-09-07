@@ -41,6 +41,8 @@ const getStyles = (theme: Theme) => ({
     width: "192px",
     borderRadius: "8px",
     backgroundColor: theme.palette.custom.input,
+    maxHeight: "180px",
+    overflowY: "auto"
   },
   option: {
     cursor: "pointer",
