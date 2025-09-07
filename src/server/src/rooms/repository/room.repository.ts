@@ -1,4 +1,6 @@
 import Redis from "ioredis";
+// @ts-ignore
+import type { Room } from "@types";
 
 export class RoomRepository {
   private client: Redis;
@@ -7,7 +9,7 @@ export class RoomRepository {
     this.client = new Redis();
   }
 
-  async getAll(): Promise<object[]> {
+  async getAll(): Promise<Room[]> {
     const keys = await this.client.keys("*");
     const rooms = await this.client.mget(...keys);
     return rooms
@@ -19,7 +21,7 @@ export class RoomRepository {
     await this.client.set(roomId, JSON.stringify(room));
   }
 
-  async getById(roomId: string): Promise<object | null> {
+  async getById(roomId: string): Promise<Room | null> {
     const data = await this.client.get(roomId);
     return data ? JSON.parse(data) : null;
   }
