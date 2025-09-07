@@ -1,3 +1,4 @@
+import { MeshesProvider } from '../../hooks/meshesContext';
 import { Canvas } from '@react-three/fiber'
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
@@ -5,7 +6,7 @@ import { io, Socket } from 'socket.io-client';
 import { Box, Container } from '@mui/material';
 import { useTheme, type Theme } from '@mui/material/styles';
 import type {Room} from  '../../types'
-
+import { Player, MeshObject } from '../../components'
 
 function Gallery() {
   const theme = useTheme();
@@ -24,11 +25,11 @@ function Gallery() {
         console.log('Room not found', roomId)
       })
 
-      socketRef.current.on('joined-room', ({ roomId }) => {
-        console.log('Joined room:', roomId);
+      socketRef.current.on('joined-room', ({ room }) => {
+        console.log('Joined room:', room);
         setRoom(room)
       });
-      
+
     } else {
       const roomName = 'My Gallery Room';
       socketRef.current.emit('create-room', roomName);
@@ -50,6 +51,10 @@ function Gallery() {
       socketRef.current.on('user-joined', ({userId}) => {
         console.log("joined:", userId)
       });
+
+      socketRef.current.on('user-disconnected', ({userId}) => {
+        console.log("user disconnected", userId)
+      })
     }
   }, [socketRef]);
 
@@ -57,20 +62,34 @@ function Gallery() {
     <Box component="main">
       <Container sx={styles.ui}>
         <Box>
-          Current Room: {room?.id}
+          Current Room: {room ? room.id : "..."}
         </Box>
       </Container>
-      <Canvas>
-
-      </Canvas>
+      <MeshesProvider>
+        <Canvas style={styles.canvas}>
+          <ambientLight intensity={Math.PI / 2} />
+          <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
+          <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
+          <Player position={[0,0,0]}/>
+          <MeshObject rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]} receiveShadow>
+            <planeGeometry args={[50, 50]} />
+            <meshStandardMaterial color="#e0e0e0" />
+          </MeshObject>
+        </Canvas>
+      </MeshesProvider>
     </Box>
   )
 }
 
-const getStyles = (theme: Theme) => ({
+const getStyles = (_theme: Theme) => ({
   ui: {
     position: "absolute",
-    top: 0
+    top: 0,
+    userSelect: "none"
+  },
+  canvas: {
+    height: '100vh',
+    width: '100vw'
   }
 })
 
