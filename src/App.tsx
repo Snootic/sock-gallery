@@ -42,7 +42,7 @@ function App() {
     <StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div style={{ position: "absolute", top: 16, right: 16 }}>
+        <div style={{ position: "absolute", top: 16, right: 16, zIndex: 1000 }}>
           <IconButton
             sx={{ ml: 1 }}
             onClick={colorMode.toggleColorMode}
