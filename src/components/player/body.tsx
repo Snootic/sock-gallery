@@ -7,11 +7,11 @@ type PlayerBodyProps = {
   color?: string
 }
 
-export interface PlayerBody extends Mesh {}
+export type PlayerBody = Mesh
 
 export const PlayerBody = forwardRef(function PlayerBody(
   { ...props }: PlayerBodyProps,
-  ref: ForwardedRef<any>
+  ref: ForwardedRef<PlayerBody>
 ) {
   return (
     <MeshObject
