@@ -87,7 +87,11 @@ export function usePlayer(initialPosition: [number, number, number]) {
     setPlayerPosition(newPos);
 
     playerBody.current.position.copy(newPos);
-    camera.position.copy(newPos);
+
+    const cameraVector = newPos.clone();
+    cameraVector.y = newPos.y + 0.75;
+
+    camera.position.copy(cameraVector);
   });
 
   return { playerBody, playerCamera, playerPosition };
