@@ -35,8 +35,8 @@ export const PlayerCamera = forwardRef(function PlayerCamera(
   useEffect(() => {
     const cam = ref && typeof ref === 'object' && ref.current ? ref.current : camera;
     const handleMouseMove = (event: MouseEvent) => {
-      cameraX.current += event.movementX * 0.002
-      cameraY.current += event.movementY * 0.002
+      cameraX.current += event.movementX * 0.025
+      cameraY.current += event.movementY * 0.025
 
       cameraY.current = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, cameraY.current))
 

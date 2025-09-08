@@ -14,6 +14,7 @@ function Gallery() {
 
   const { roomId } = useParams();
   const socketRef = useRef<Socket | null>(null);
+  const canvasRef = useRef(null)
   const [room, setRoom] = useState<Room | undefined>(undefined)
 
   useEffect(() => {
@@ -66,11 +67,15 @@ function Gallery() {
         </Box>
       </Container>
       <MeshesProvider>
-        <Canvas style={styles.canvas}>
+        <Canvas ref={canvasRef} style={styles.canvas} onClick={() => {canvasRef.current? canvasRef.current.requestPointerLock() : null}}>
           <ambientLight intensity={Math.PI / 2} />
           <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
           <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
           <Player position={[0,0,0]}/>
+            <MeshObject position={[2, 0, 2]}>
+              <boxGeometry args={[1,1,1]}/>
+              <meshStandardMaterial color="#ff0000" />
+            </MeshObject>
           <MeshObject rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]} receiveShadow>
             <planeGeometry args={[50, 50]} />
             <meshStandardMaterial color="#e0e0e0" />
