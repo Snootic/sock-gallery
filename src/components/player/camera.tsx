@@ -1,6 +1,6 @@
 import { useThree } from '@react-three/fiber'
 import { useEffect, useRef, forwardRef, type ForwardedRef } from 'react'
-import { Camera, Quaternion, Vector3 } from 'three';
+import { PerspectiveCamera as Camera, Quaternion, Vector3 } from 'three';
 import { PerspectiveCamera } from '@react-three/drei';
 
 type CameraPosition = {
@@ -18,7 +18,7 @@ export interface PlayerCamera extends Camera {
 }
 export const PlayerCamera = forwardRef(function PlayerCamera(
   { CameraPosition }: PlayerCameraProps,
-  ref: ForwardedRef<any>
+  ref: ForwardedRef<PlayerCamera>
 ) {
   const cameraX = useRef(0)
   const cameraY = useRef(0)
