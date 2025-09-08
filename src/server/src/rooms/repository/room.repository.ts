@@ -1,5 +1,4 @@
 import Redis from "ioredis";
-// @ts-ignore
 import type { Room } from "@types";
 
 export class RoomRepository {

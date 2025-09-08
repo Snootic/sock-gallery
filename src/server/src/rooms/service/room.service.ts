@@ -1,7 +1,6 @@
 import type { Socket } from "socket.io";
 import { RoomRepository } from "../repository/room.repository";
-// @ts-ignore
-import { Room } from '@types'
+import { Room, Player } from '@types'
 
 export class RoomService {
   private repository: RoomRepository;
@@ -29,8 +28,8 @@ export class RoomService {
     const room: Room = {
       id: roomId,
       name: roomName,
-      host: { id: host.id },
-      players: [{ id: host.id }]
+      host: host.id,
+      players: []
     }
 
     await this.repository.save(roomId, room);
@@ -46,8 +45,8 @@ export class RoomService {
     return this.repository.getAll()
   }
 
-  async setPlayer(player: Socket, room: Room) {
-    room.players.push({id: player.id})
+  async setPlayer(player: Player, room: Room) {
+    room.players.push(player)
 
     await this.repository.save(room.id, room)
 
@@ -58,7 +57,7 @@ export class RoomService {
     const rooms = await this.repository.getAll()
 
     for (const room of rooms) {
-      if (room.players.some((p: Room['host']) => p.id === player.id)) {
+      if (room.players.some((p: Player) => p.id === player.id)) {
         return room;
       }
     }

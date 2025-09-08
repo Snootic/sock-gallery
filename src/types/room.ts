@@ -3,6 +3,6 @@ import {type Player} from "./player"
 export type Room = {
   id: string,
   name: string,
-  host: Player,
+  host: Player['id'],
   players: Player[]
 }

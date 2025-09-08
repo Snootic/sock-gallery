@@ -1,6 +1,7 @@
 import { Socket, Server as SocketIOServer } from 'socket.io';
 import http from 'http';
 import { RoomService } from '../rooms/service/room.service';
+import { Player } from '@types';
 
 export class IOServer {
   private io: SocketIOServer
@@ -40,11 +41,19 @@ export class IOServer {
       socket.on('ice-candidate', ({ target, candidate }) => {
         this.io.to(target).emit('ice-candidate', candidate);
       });
+
+      socket.on('player-moved', async (playerData: Player ) => {
+        const room = await this.roomService.findPeerRoom(socket);
+        if (room) {
+          socket.to(room.id).emit('player-moved', playerData );
+        }
+      })
     });
   }
 
   private async handleCreateRoom(socket: Socket, roomName: string) {
     const room = await this.roomService.createRoom(roomName, socket);
+    await this.handleJoinRoom(socket, room.id)
     socket.join(room.id);
     socket.emit('room-created', { room });
   }
@@ -57,7 +66,8 @@ export class IOServer {
     }
 
     socket.join(roomId);
-    room = await this.roomService.setPlayer(socket, room);
+    const player: Player = {id: socket.id, position: [0,0,0]}
+    room = await this.roomService.setPlayer(player, room);
     socket.to(roomId).emit('user-joined', { userId: socket.id });
 
     return socket.emit('joined-room', { room });
