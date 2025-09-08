@@ -4,14 +4,17 @@ import { useFrame } from '@react-three/fiber';
 import { PlayerCamera } from '../../components/player/camera';
 import PlayerBody from '../../components/player/body';
 import { useCollision } from '../collision';
+import { Socket } from 'socket.io-client';
+import type { Player } from '../../types';
 
-export function usePlayer(initialPosition: [number, number, number]) {
+export function usePlayer(player: Player, socket: Socket | null) {
   const playerBody = useRef<PlayerBody>(null);
   const playerCamera = useRef<PlayerCamera>(null);
   const checkCollision = useCollision()
 
-  const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(...initialPosition));
+  const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(...player.position));
   const [velocityY, setVelocityY] = useState<number>(0)
+  const lastPosition = useRef(new THREE.Vector3(...player.position));
 
   const keys = useRef<{ [key: string]: boolean }>({
     w: false, a: false, s: false, d: false, space: false, Shift: false,
@@ -85,6 +88,12 @@ export function usePlayer(initialPosition: [number, number, number]) {
     }
 
     setPlayerPosition(newPos);
+
+    if (socket && newPos.distanceTo(lastPosition.current) > 0.01) {
+      player.position = [newPos.x, newPos.y, newPos.z]
+      socket.emit('player-moved', player );
+      lastPosition.current.copy(newPos);
+    }
 
     playerBody.current.position.copy(newPos);
 
