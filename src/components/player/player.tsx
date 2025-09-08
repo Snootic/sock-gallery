@@ -29,10 +29,10 @@ export function Player({ id, position, color, socket }: Player & { socket: Socke
   }, []);
 
   return (
-    <>
+    <group name="player">
       {cameraType === 'firstPerson' && <PlayerCamera ref={playerCamera} CameraPosition={{x:0, y:0.5, z:0}}  />}
       {cameraType === 'thirdPerson' && <PlayerCamera ref={playerCamera} CameraPosition={{x:5, y:1, z:10}}  />}
       <PlayerBody ref={playerBody} position={position} color={color} />
-    </>
+    </group>
   );
 }

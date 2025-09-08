@@ -6,6 +6,7 @@ import { Box, Container } from '@mui/material';
 import { useTheme, type Theme } from '@mui/material/styles';
 import { Player, MeshObject } from '../../components'
 import { useSocket } from '../../hooks/useSocket';
+import PlayerBody from '../../components/player/body';
 
 function Gallery() {
   const theme = useTheme();
@@ -39,7 +40,7 @@ function Gallery() {
             <Player id={socket.id as string} position={[0,0,0]} socket={socket}/>
           }
           {Object.entries(players).map(([id, playerData]) => (
-            <Player key={id} id={id} position={playerData.position} socket={null}/>
+            <PlayerBody key={id} position={playerData.position}/>
           ))}
           <MeshObject rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]} receiveShadow>
             <planeGeometry args={[50, 50]} />
@@ -54,8 +55,9 @@ function Gallery() {
 const getStyles = (theme: Theme) => ({
   ui: {
     position: "absolute",
+    zIndex: 100,
     top: 0,
-    userSelect: "none",
+    // userSelect: "none",
     color: theme.palette.text.primary
   },
   canvas: {

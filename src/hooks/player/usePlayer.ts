@@ -21,6 +21,8 @@ export function usePlayer(player: Player, socket: Socket | null) {
   }).current;
 
   useEffect(() => {
+    if (!socket) return
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key === ' ' ? 'space' : e.key;
       if (key in keys) keys[key] = true;
@@ -37,9 +39,10 @@ export function usePlayer(player: Player, socket: Socket | null) {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [keys]);
+  }, [keys, socket]);
 
   useFrame(() => {
+    if (!socket) return
     if (!playerBody.current || !playerCamera.current) return;
 
     const camera = playerCamera.current;
