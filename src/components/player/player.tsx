@@ -1,13 +1,14 @@
 import { PlayerCamera } from "./camera";
 import { PlayerBody } from "./body";
 import { useEffect, useState } from "react";
-import { usePlayer } from "../../hooks/player/usePlayer"; // Assuming you create a new hook file
+import { usePlayer } from "../../hooks/player/usePlayer";
 import type { Player } from "../../types";
 import type { Socket } from "socket.io-client";
 
 export function Player({ id, position, color, socket }: Player & { socket: Socket | null}) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { playerBody, playerCamera, playerPosition } = usePlayer({ id, position, color }, socket);
+  const playerData = usePlayer({ id, position, color }, socket);
+  const playerBody = playerData.playerBody
+  const playerCamera = playerData.playerCamera
   const [cameraType, setCameraType] = useState<'firstPerson' | 'thirdPerson'>('firstPerson');
 
   useEffect(() => {
