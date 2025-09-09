@@ -1,7 +1,7 @@
 import { createContext, useContext, useRef, useEffect } from "react";
 import type { Mesh } from "three";
 
-const MeshesContext = createContext<React.RefObject<Mesh[]>>(null!);
+export const MeshesContext = createContext<React.RefObject<Mesh[]>>(null!);
 
 export function useMeshes() {
   return useContext(MeshesContext);
@@ -27,13 +27,4 @@ export function useRegisterMesh() {
   }, [meshesContextRef]);
 
   return meshRef;
-}
-
-export function MeshesProvider({ children }: { children: React.ReactNode }) {
-  const meshesRef = useRef<Mesh[]>([]);
-  return (
-    <MeshesContext.Provider value={meshesRef}>
-      {children}
-    </MeshesContext.Provider>
-  );
 }
