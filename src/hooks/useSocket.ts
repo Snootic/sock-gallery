@@ -59,7 +59,7 @@ export const useSocket = (roomId?: string) => {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [roomId]);
 
   return { socket: socketRef.current, room, players };
 };
