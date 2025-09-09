@@ -5,7 +5,7 @@ const commonSettings: ThemeOptions = {
         MuiButton: {
             styleOverrides: {
                 root: ({ theme }: { theme: Theme }) => ({
-                    background: `linear-gradient(130deg, ${theme.palette.primary.main} 40%, ${theme.palette.secondary.main} 60%)`,
+                    background: `linear-gradient(130deg, ${theme.palette.green.main} 40%, ${theme.palette.green.light} 60%)`,
                     boxShadow:
                         "0 2px 8px rgba(0, 0, 0, 0.18), 0 0 24px 4px rgba(0,255,255,0.12)",
                     borderRadius: "8px",
@@ -17,9 +17,9 @@ const commonSettings: ThemeOptions = {
                     overflow: "hidden",
                     transition: "border-color 0.35s",
                     color: theme.palette.text.primary,
-                    border: `2px solid ${theme.palette.custom.inputBorder}`,
+                    border: `2px solid ${theme.palette.input.border}`,
                     "&:hover": {
-                        background: `linear-gradient(130deg, ${theme.palette.secondary.main} 40%, ${theme.palette.success.main} 60%)`,
+                        background: `linear-gradient(130deg, ${theme.palette.green.light} 40%, ${theme.palette.green.main} 60%)`,
                         border: `2px solid ${theme.palette.info.main}`,
                     },
                 }),
@@ -28,10 +28,10 @@ const commonSettings: ThemeOptions = {
         MuiInputBase: {
             styleOverrides: {
                 root: ({ theme }: { theme: Theme }) => ({
-                    background: theme.palette.custom.input,
+                    background: theme.palette.input.main,
                     color: theme.palette.text.primary,
                     borderRadius: "8px",
-                    border: `2px solid ${theme.palette.custom.inputBorder}`,
+                    border: `2px solid ${theme.palette.input.border}`,
                     paddingLeft: "6px",
                     "&:hover": {
                         background: theme.palette.background.default,
@@ -52,56 +52,48 @@ export const getTheme = (mode: "light" | "dark") => {
         ? {
             background: {
               default: "#242424",
-              paper: "#2f4f4f",
-              deepGreen: "#035338",
+              paper: "#2f4f4f"
             },
-            custom: {
-              input: "#1c2b2bff",
-              inputHover: "#2a3f3fff",
-              inputBorder: "#7e7e7eff"
-            },
-            primary: {
-              main: "#035338", // dark-green
-            },
-            secondary: {
-              main: "#078f5b", // mid-green
+            input: {
+              main: "#1c2b2bff",
+              hover: "#2a3f3fff",
+              border: "#7e7e7eff"
             },
             info: {
-              main: "#5c04ff", // indigo
-            },
-            success: {
-              main: "#00dfae", // light-green
+              main: "#5c04ff",
             },
             text: {
               primary: "#e0e0e0",
               secondary: "#ffffff",
             },
+            green: {
+              light: "#00dfae",
+              main: "#078f5b",
+              dark: "#035338"
+            }
           }
         : {
             background: {
               default: "#ffffff",
               paper: "#f5f5f5",
             },
-            custom: {
-              input: "#e0f7fa",
-              inputBorder: "#7e7e7eff"
-            },
-            primary: {
-              main: "#078f5b", // mid-green
-            },
-            secondary: {
-              main: "#035338", // dark-green
+            input: {
+              main: "#e0f7fa",
+              hover: "#a8b6b8ff",
+              border: "#7e7e7eff"
             },
             info: {
-              main: "#5c04ff", // indigo
-            },
-            success: {
-              main: "#00dfae", // light-green
+              main: "#5c04ff",
             },
             text: {
               primary: "#000000",
               secondary: "#242424",
             },
+            green: {
+              light: "#00dfae",
+              main: "#078f5b",
+              dark: "#035338"
+            }
           }),
     },
     ...commonSettings,
