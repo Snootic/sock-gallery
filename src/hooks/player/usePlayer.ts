@@ -51,7 +51,7 @@ export function usePlayer(player: Player, socket: Socket | null) {
     camera.getWorldDirection(camera.facingDirection);
 
     let moveSpeed = 0.07;
-    if (keys.Shift) moveSpeed *= 2;
+    if (keys.Shift) moveSpeed *= 1.5;
 
     const forward = new THREE.Vector3().copy(camera.facingDirection);
     const right = new THREE.Vector3()
@@ -82,7 +82,7 @@ export function usePlayer(player: Player, socket: Socket | null) {
       });
     }
 
-    if (keys.space && isOnGround) setVelocityY(0.2)
+    if (keys.space && isOnGround) setVelocityY(0.15)
     
     const newPos = playerPosition.clone().add(moveVector);
 
