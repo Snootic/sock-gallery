@@ -15,6 +15,8 @@ export const MeshObject = forwardRef<Mesh, JSX.IntrinsicElements["mesh"]>(
             ref.current = node;
           }
         }}
+        receiveShadow={true}
+        castShadow={true}
         {...props}
       />
     );
