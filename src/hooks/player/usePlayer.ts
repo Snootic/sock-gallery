@@ -57,6 +57,11 @@ export function usePlayer(player: Player, socket: Socket | null) {
     const right = new THREE.Vector3()
     .copy(camera.facingDirection)
     .cross(camera.up);
+
+    body.quaternion.setFromUnitVectors(
+      new THREE.Vector3(0, 0, 1),
+      new THREE.Vector3(camera.facingDirection.x, 0, camera.facingDirection.z).normalize()
+    );
   
     if (keys.w) moveVector.add(forward);
     if (keys.s) moveVector.sub(forward);
@@ -100,8 +105,18 @@ export function usePlayer(player: Player, socket: Socket | null) {
 
     playerBody.current.position.copy(newPos);
 
-    const cameraVector = newPos.clone();
-    cameraVector.y = newPos.y + 0.75;
+    let cameraVector;
+
+    if (camera.CameraType === 'firstPerson') {
+      cameraVector = newPos.clone();
+      cameraVector.y = newPos.y + 0.75;
+    } else {
+      cameraVector = newPos.clone();
+      const offset = new THREE.Vector3(0, 1, 3);
+      offset.applyQuaternion(camera.quaternion);
+      cameraVector.add(offset);
+    }
+
 
     camera.position.copy(cameraVector);
   });

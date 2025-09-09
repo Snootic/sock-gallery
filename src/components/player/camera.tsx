@@ -15,6 +15,7 @@ interface PlayerCameraProps {
 
 export interface PlayerCamera extends Camera {
   facingDirection: Vector3
+  CameraType: 'firstPerson' | 'thirdPerson'
 }
 export const PlayerCamera = forwardRef(function PlayerCamera(
   { CameraPosition }: PlayerCameraProps,
