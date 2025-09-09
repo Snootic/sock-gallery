@@ -103,6 +103,7 @@ function Gallery() {
       </Container>
       <MeshesProvider>
         <Canvas
+          id="canvas"
           ref={canvasRef}
           style={styles.canvas}
           onClick={() => {

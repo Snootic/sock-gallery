@@ -25,6 +25,8 @@ export const PlayerCamera = forwardRef(function PlayerCamera(
   const cameraY = useRef(0)
   const { camera } = useThree();
 
+  const isLocked = document.pointerLockElement === document.querySelector('canvas');
+
   useEffect(() => {
     const cam = ref && typeof ref === 'object' && ref.current
       ? ref.current as PlayerCamera
@@ -47,9 +49,11 @@ export const PlayerCamera = forwardRef(function PlayerCamera(
       cam.quaternion.copy(quaternionY).multiply(quaternionX)
     }
 
+    if (!isLocked) return
+    
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [camera, ref])
+  }, [camera, ref, isLocked])
 
   return (
     <PerspectiveCamera
