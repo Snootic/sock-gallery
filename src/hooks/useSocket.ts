@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Socket } from "socket.io-client";
 import { io } from "socket.io-client";
 import type { Player as PlayerData, Room } from "../types";
+import { signalingServer } from "../constants/server";
 
 export const useSocket = (roomId?: string) => {
   const socketRef = useRef<Socket | null>(null);
@@ -9,7 +10,7 @@ export const useSocket = (roomId?: string) => {
   const [players, setPlayers] = useState<PlayerData[]>([]);
 
   useEffect(() => {
-    socketRef.current = io('http://localhost:3001');
+    socketRef.current = io(signalingServer);
     const socket = socketRef.current;
 
     if (roomId) {

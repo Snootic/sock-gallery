@@ -4,6 +4,7 @@ import { GameSelect } from "../../components";
 import type { Room } from "../../types";
 import { useTheme, type Theme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import { signalingServer } from "../../constants/server";
 
 export default function MainMenu() {
   const [showRoomsVisible, setShowRoomsVisible] = React.useState(false);
@@ -31,7 +32,7 @@ export default function MainMenu() {
   }
 
   useEffect(() => {
-    fetch("http://localhost:3001/rooms")
+    fetch(`${signalingServer}/rooms`)
       .then(res => res.json())
       .then(data => Array.isArray(data) ? setGames(data) : setGames([]))
       .catch(() => setGames([]));
@@ -110,7 +111,7 @@ const getStyles = (theme: Theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: `linear-gradient(160deg, ${theme.palette.background.paper} 20%, ${theme.palette.background.deepGreen} 90%)`,
+    background: `linear-gradient(160deg, ${theme.palette.background.paper} 20%, ${theme.palette.green.dark} 90%)`,
     backdropFilter: 'blur(100px)',
     gap: "10px",
   },
