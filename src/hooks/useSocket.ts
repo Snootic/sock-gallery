@@ -1,19 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import type { Socket } from "socket.io-client";
 import { io } from "socket.io-client";
-import type { Player as PlayerData, Room } from "../types";
+import type { Room, WorldObject } from "../types";
 import { signalingServer } from "../constants/server";
+import { useRooms } from "./useRooms";
 
 export const useSocket = (roomId?: string) => {
   const socketRef = useRef<Socket | null>(null);
-  const [room, setRoom] = useState<Room | undefined>(undefined);
-  const [players, setPlayers] = useState<PlayerData[]>([]);
+  const { room: [currentRoom, setRoom] } = useRooms();
+  const [worldObjects, setWorldObjects] = useState<WorldObject[]>([]);
+  const roomJoinedRef = useRef(false);
 
   useEffect(() => {
-    socketRef.current = io(signalingServer);
+    if (!socketRef.current) {
+      socketRef.current = io(signalingServer);
+    }
+
     const socket = socketRef.current;
 
-    if (roomId) {
+    if (roomId && !roomJoinedRef.current) {
+      roomJoinedRef.current = true;
       socket.emit("join-room", roomId);
 
       socket.on("not-found", ({ roomId }) => {
@@ -24,43 +30,41 @@ export const useSocket = (roomId?: string) => {
         console.log("Joined room:", room);
         setRoom(room);
       });
-    } else {
+    } else if (!roomJoinedRef.current) {
+      roomJoinedRef.current = true;
       const roomName = "My Gallery Room";
-
       socket.emit("create-room", roomName);
-      
+
       socket.on("room-created", ({ room }) => {
         console.log("Room created:", room);
         setRoom(room);
       });
     }
 
-    socket.on("user-joined", ({ userId }) => {
-      console.log("joined:", userId);
-    });
+    const handleUserJoined = ({ userId, room }: { userId: string, room: Room }) => {
+      console.log("user joined", userId);
+      setRoom(room)
+    };
 
-    socket.on("user-disconnected", ({ userId }) => {
+    const handleUserDisconnected = ({ userId, room }: { userId: string, room: Room }) => {
       console.log("user disconnected", userId);
-    });
+      setRoom(room)
+    };
 
-    socket.on("player-moved", (playerData) => {
-      setPlayers((prevPlayers) => {
-        const existingIndex = prevPlayers.findIndex(
-          (p) => p.id === playerData.id
-        );
-        if (existingIndex !== -1) {
-          const updatedPlayers = [...prevPlayers];
-          updatedPlayers[existingIndex] = playerData;
-          return updatedPlayers;
-        }
-        return [...prevPlayers, playerData];
-      });
-    });
+    const handleWorldData = (newWorldObjects: WorldObject[]) => {
+      setWorldObjects(newWorldObjects);
+    };
+
+    socket.on("user-joined", handleUserJoined);
+    socket.on("user-disconnected", handleUserDisconnected);
+    socket.on("world-data", handleWorldData);
 
     return () => {
-      socket.disconnect();
+      socket.off("user-joined", handleUserJoined);
+      socket.off("user-disconnected", handleUserDisconnected);
+      socket.off("world-data", handleWorldData);
     };
   }, [roomId]);
 
-  return { socket: socketRef.current, room, players };
+  return { socket: socketRef.current, room: currentRoom, worldObjects };
 };
