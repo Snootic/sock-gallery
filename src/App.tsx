@@ -1,12 +1,13 @@
 import { useState, useMemo, StrictMode } from "react";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { getTheme } from "./constants/theme";
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainMenu from "./pages/mainMenu";
-import Gallery from './pages/gallery'
+import Gallery from "./pages/gallery";
 import IconButton from "@mui/material/IconButton";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { RoomProvider } from "./Providers/roomProvider";
 
 function App() {
   const [mode, setMode] = useState<"light" | "dark">("dark");
@@ -22,21 +23,20 @@ function App() {
 
   const theme = useMemo(() => getTheme(mode), [mode]);
 
-    
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: "/",
       element: <MainMenu />,
     },
     {
-      path: '/gallery',
+      path: "/gallery",
       element: <Gallery />,
     },
     {
-      path: '/gallery/:roomId',
+      path: "/gallery/:roomId",
       element: <Gallery />,
     },
-  ])
+  ]);
 
   return (
     <StrictMode>
@@ -55,7 +55,9 @@ function App() {
             )}
           </IconButton>
         </div>
-        <RouterProvider router={router} />
+        <RoomProvider>
+          <RouterProvider router={router} />
+        </RoomProvider>
       </ThemeProvider>
     </StrictMode>
   );
