@@ -1,7 +1,7 @@
-import { createContext, useContext, useRef, useEffect } from "react";
+import { useContext, useRef, useEffect } from "react";
 import type { Mesh } from "three";
+import { MeshesContext } from "../context/meshesContext";
 
-export const MeshesContext = createContext<React.RefObject<Mesh[]>>(null!);
 
 export function useMeshes() {
   return useContext(MeshesContext);

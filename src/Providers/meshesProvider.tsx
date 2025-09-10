@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import type { Mesh } from "three";
-import { MeshesContext } from "./useMeshes";
+import { MeshesContext } from "../context/meshesContext";
 
 export function MeshesProvider({ children }: { children: React.ReactNode }) {
   const meshesRef = useRef<Mesh[]>([]);
