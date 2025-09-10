@@ -29,10 +29,10 @@ const SceneContent = ({
     },
     {
       //teto
-      rotation: [-Math.PI / 2, 0, 0],
-      position: [0, 6, 0],
+      rotation: [Math.PI / 2, 0, 0],
+      position: [0, 5, 0],
       geometry: [50, 50],
-      color: "blue",
+      color: "purple",
     },
     {
       rotation: [0, -Math.PI / 2, 0],
@@ -75,12 +75,12 @@ const SceneContent = ({
         ))}
       </group>
       <ambientLight intensity={0.5} />
-      <Lamp position={[0,3,0]} />
+      <Lamp position={[0,4.8,0]} />
       {socket?.id && (
         <Player id={socket.id as string} position={[0, 0, 0]} socket={socket} />
       )}
       {Object.entries(players).map(([id, playerData]) => (
-        <PlayerBody key={id} position={playerData.position} />
+        <PlayerBody key={id} position={playerData.position} rotation={playerData.rotation}/>
       ))}
 
       <Frame color={"blue"} position={[0, 0.5, 0]} />
