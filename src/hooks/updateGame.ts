@@ -6,8 +6,8 @@ import { useRooms } from "./useRooms";
 
 export const useUpdateGame = () => {
   const meshesRef = useMeshes();
-  const { socket, room } = useSocketContext();
-  const {room: [currentRoom, setRoom]} = useRooms();
+  const { socket } = useSocketContext();
+  const {room: [currentRoom]} = useRooms();
   const prevStateRef = useRef(new Map<string, unknown>());
 
   const sendAllWorldData = useCallback(() => {
@@ -48,7 +48,7 @@ export const useUpdateGame = () => {
 
       if (newPlayerExists) {
         sendAllWorldData();
-        console.log('sent all')
+        console.log('sent all', delta)
       } else {
         console.log('sent updated only')
         sendUpdatedWorldData();

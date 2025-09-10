@@ -1,1 +1,3 @@
-export type WorldObject = { uuid: string; [key: string]: unknown };
+import type { MeshJSON } from "three";
+
+export type WorldObject = MeshJSON;
