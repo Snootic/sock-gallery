@@ -42,10 +42,10 @@ export class IOServer {
         this.io.to(target).emit('ice-candidate', candidate);
       });
 
-      socket.on('player-moved', async (playerData: Player ) => {
+      socket.on('world-data', async (playerData: Player ) => {
         const room = await this.roomService.findPeerRoom(socket);
         if (room) {
-          socket.to(room.id).emit('player-moved', playerData );
+          socket.to(room.id).emit('world-data', playerData );
         }
       })
     });
@@ -68,7 +68,7 @@ export class IOServer {
     socket.join(roomId);
     const player: Player = {id: socket.id, position: [0,0,0]}
     room = await this.roomService.setPlayer(player, room);
-    socket.to(roomId).emit('user-joined', { userId: socket.id });
+    socket.to(roomId).emit('user-joined', { userId: socket.id, room });
 
     return socket.emit('joined-room', { room });
   }
@@ -81,8 +81,8 @@ export class IOServer {
     }
     socket.leave(room.id);
     room = await this.roomService.removePlayer(socket, room);
-    socket.to(room.id).emit('user-disconnected', { userId: socket.id });
+    socket.to(room.id).emit('user-disconnected', { userId: socket.id, room });
     
-    return socket.emit('joined-room', { room });
+    return socket.emit('disconnected', { room });
   }
 }
