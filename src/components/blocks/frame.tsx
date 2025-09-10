@@ -8,9 +8,11 @@ interface FrameProps extends Mesh {
 
 export const Frame: React.FC<FrameProps> = ({ color, ...props }) => {
   return (
-    <MeshObject {...props}>
-      <boxGeometry args={[0.7, 1, 0.2]} />
-      <meshLambertMaterial color={color} />
-    </MeshObject>
+    <group name="frame">
+      <MeshObject {...props} userData={{ componentType: "Frame" }}>
+        <boxGeometry args={[0.7, 1, 0.2]} />
+        <meshLambertMaterial color={color} />
+      </MeshObject>
+    </group>
   );
 };
