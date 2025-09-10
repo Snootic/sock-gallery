@@ -5,8 +5,8 @@ import { useTheme, type Theme } from "@mui/material/styles";
 
 type SelectProps = {
   values: Room[]
-  selectedValue: Room['id'] | undefined
-  setSelectedvalue: React.Dispatch<React.SetStateAction<Room['id'] | undefined>>
+  selectedValue: Room | undefined
+  setSelectedvalue: React.Dispatch<React.SetStateAction<Room | undefined>>
 }
 
 export const GameSelect: React.FC<SelectProps> = (props) => {
@@ -23,7 +23,7 @@ export const GameSelect: React.FC<SelectProps> = (props) => {
             ...styles.option,
             "&:hover": styles.optionHover,
           }}
-          onClick={() => props.setSelectedvalue(host.id)}
+          onClick={() => props.setSelectedvalue(host)}
         >
           {host.name} [{host.id}]
         </Box>
