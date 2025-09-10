@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useUpdateGame } from "./updateGame";
 
 export const useGameTick = () => {
-  const TICK_RATE = 5;
+  const TICK_RATE = 20 ;
   const TICK_INTERVAL = 1000 / TICK_RATE;
 
   const updateGame = useUpdateGame();
@@ -17,10 +17,10 @@ export const useGameTick = () => {
 
     const intervalId = setInterval(() => {
       const now = Date.now();
-      const delta = (now - lastTick) / 1000;
+      const delta = (now - lastTick) / TICK_RATE;
       lastTick = now;
 
-      updateGameRef.current(false);
+      updateGameRef.current(delta);
     }, TICK_INTERVAL);
 
     return () => clearInterval(intervalId);
