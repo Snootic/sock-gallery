@@ -7,14 +7,14 @@ import { useCollision } from '../collision';
 import { Socket } from 'socket.io-client';
 import type { Player } from '../../types';
 
-export function usePlayer(player: Player, socket: Socket | null) {
+export function usePlayer(player: Partial<Player>, socket: Socket | null) {
   const playerBody = useRef<PlayerBody>(null);
   const playerCamera = useRef<PlayerCamera>(null);
   const checkCollision = useCollision()
 
-  const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(...player.position));
+  const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(...player.position!));
   const [velocityY, setVelocityY] = useState<number>(0)
-  const lastPosition = useRef(new THREE.Vector3(...player.position));
+  const lastPosition = useRef(new THREE.Vector3(...player.position!));
 
   const keys = useRef<{ [key: string]: boolean }>({
     w: false, a: false, s: false, d: false, space: false, Shift: false,
@@ -58,7 +58,7 @@ export function usePlayer(player: Player, socket: Socket | null) {
     .copy(camera.facingDirection)
     .cross(camera.up);
 
-    body.quaternion.setFromUnitVectors(
+    player.rotation = body.quaternion.setFromUnitVectors(
       new THREE.Vector3(0, 0, 1),
       new THREE.Vector3(camera.facingDirection.x, 0, camera.facingDirection.z).normalize()
     );
