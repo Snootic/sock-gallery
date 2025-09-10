@@ -1,16 +1,16 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Button, InputBase, Box } from "@mui/material";
 import { GameSelect } from "../../components";
 import type { Room } from "../../types";
 import { useTheme, type Theme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { signalingServer } from "../../constants/server";
+import { useRooms } from "../../hooks/useRooms";
 
 export default function MainMenu() {
   const [showRoomsVisible, setShowRoomsVisible] = React.useState(false);
   const [host, setHost] = React.useState<string>("");
-  const [games, setGames] = React.useState<Room[]>([]);
-  const [selectedGame, setSelectedGame] = React.useState<Room["id"] | undefined>(undefined);
+  const { roomList: [rooms, setRooms], room: [room, setRoom] } = useRooms();
   const navigate = useNavigate();
 
   const handleShowRooms = () => {
@@ -18,36 +18,31 @@ export default function MainMenu() {
   };
 
   const theme = useTheme();
-  const styles = getStyles(theme)
+  const styles = getStyles(theme);
 
   const handleJoinRoom = () => {
-    if (!host && !selectedGame) {
-      console.log("NONE")
-      return null
+    if (!host && !room) {
+      console.log("NONE");
+      return null;
     }
 
-    console.log(selectedGame)
-
-    navigate(`/gallery/${host || selectedGame}`)
-  }
+    navigate(`/gallery/${host || room}`);
+  };
 
   useEffect(() => {
     fetch(`${signalingServer}/rooms`)
-      .then(res => res.json())
-      .then(data => Array.isArray(data) ? setGames(data) : setGames([]))
-      .catch(() => setGames([]));
-  }, [])
+      .then((res) => res.json())
+      .then((data) => (Array.isArray(data) ? setRooms(data) : setRooms([])))
+      .catch(() => setRooms([]));
+  }, []);
 
   useEffect(() => {
-    handleJoinRoom()
-  }, [selectedGame])
+    handleJoinRoom();
+  }, [room]);
 
   return (
     <Box component="main" sx={styles.main}>
-      <Box
-        component="div"
-        sx={styles.menu}
-      >
+      <Box component="div" sx={styles.menu}>
         <Button
           variant="contained"
           onClick={() => navigate("/gallery")}
@@ -79,7 +74,9 @@ export default function MainMenu() {
               <InputBase
                 placeholder="Game Code"
                 value={host}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHost(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setHost(e.target.value)
+                }
               />
               <Button
                 variant="contained"
@@ -90,9 +87,9 @@ export default function MainMenu() {
               </Button>
             </Box>
             <GameSelect
-              values={games}
-              selectedValue={selectedGame}
-              setSelectedvalue={setSelectedGame}
+              values={rooms}
+              selectedValue={room}
+              setSelectedvalue={setRoom}
             />
           </Box>
         )}
@@ -112,7 +109,7 @@ const getStyles = (theme: Theme) => ({
     alignItems: "center",
     justifyContent: "center",
     background: `linear-gradient(160deg, ${theme.palette.background.paper} 20%, ${theme.palette.green.dark} 90%)`,
-    backdropFilter: 'blur(100px)',
+    backdropFilter: "blur(100px)",
     gap: "10px",
   },
   main: {
@@ -120,5 +117,5 @@ const getStyles = (theme: Theme) => ({
     alignItems: "center",
     justifyContent: "center",
     minHeight: "100vh",
-  }
+  },
 });
