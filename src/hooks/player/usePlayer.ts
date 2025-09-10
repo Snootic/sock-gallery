@@ -14,7 +14,6 @@ export function usePlayer(player: Partial<Player>, socket: Socket | null) {
 
   const [playerPosition, setPlayerPosition] = useState(new THREE.Vector3(...player.position!));
   const [velocityY, setVelocityY] = useState<number>(0)
-  const lastPosition = useRef(new THREE.Vector3(...player.position!));
 
   const keys = useRef<{ [key: string]: boolean }>({
     w: false, a: false, s: false, d: false, space: false, Shift: false,
@@ -96,12 +95,6 @@ export function usePlayer(player: Partial<Player>, socket: Socket | null) {
     }
 
     setPlayerPosition(newPos);
-
-    if (socket && newPos.distanceTo(lastPosition.current) > 0.01) {
-      player.position = [newPos.x, newPos.y, newPos.z]
-      socket.emit('player-moved', player );
-      lastPosition.current.copy(newPos);
-    }
 
     playerBody.current.position.copy(newPos);
 
