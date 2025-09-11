@@ -1,7 +1,7 @@
 import { Socket, Server as SocketIOServer } from 'socket.io';
 import http from 'http';
 import { RoomService } from '../rooms/service/room.service';
-import { Player } from '@types';
+import { Player, WorldObject } from '@types';
 
 export class IOServer {
   private io: SocketIOServer
@@ -42,12 +42,19 @@ export class IOServer {
         this.io.to(target).emit('ice-candidate', candidate);
       });
 
-      socket.on('world-data', async (playerData: Player ) => {
+      socket.on('world-data', async (worldData: WorldObject[] ) => {
         const room = await this.roomService.findPeerRoom(socket);
         if (room) {
-          socket.to(room.id).emit('world-data', playerData );
+          socket.to(room.id).emit('world-data', worldData );
         }
       })
+
+      socket.on('player-data', async(playersData: WorldObject[]) => {
+        const room = await this.roomService.findPeerRoom(socket);
+        if (room) {
+          socket.to(room.id).emit('player-data', playersData)
+        }
+      } )
     });
   }
 

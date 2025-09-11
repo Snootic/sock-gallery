@@ -55,14 +55,26 @@ export const useSocket = (roomId?: string) => {
       setWorldObjects(newWorldObjects);
     };
 
+    const handlePlayersData = (playersData: WorldObject[]) => {
+      setWorldObjects((prev) => {
+        const map = new Map(prev.map((obj) => [obj.object.uuid, obj]));
+        playersData.forEach((obj) => {
+          map.set(obj.object.uuid, obj);
+        });
+        return Array.from(map.values());
+      });
+    }
+
     socket.on("user-joined", handleUserJoined);
     socket.on("user-disconnected", handleUserDisconnected);
     socket.on("world-data", handleWorldData);
+    socket.on("player-data", handlePlayersData);
 
     return () => {
       socket.off("user-joined", handleUserJoined);
       socket.off("user-disconnected", handleUserDisconnected);
       socket.off("world-data", handleWorldData);
+      socket.off("player-data", handlePlayersData);
     };
   }, [roomId]);
 
