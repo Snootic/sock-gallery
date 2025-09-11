@@ -32,7 +32,7 @@ export function Player({ socket, ...props }: { socket: Socket | null} & Partial<
     <group name="player">
       <PlayerCamera ref={playerCamera} CameraPosition={{x:0, y:0.5, z:0}}/>
       {playerCamera.current && (playerCamera.current.CameraType = cameraType)}
-      <PlayerBody ref={playerBody} position={props.position!} color={props.color} />
+      <PlayerBody playerId={props.id!} ref={playerBody} position={props.position!} color={props.color} />
     </group>
   );
 }

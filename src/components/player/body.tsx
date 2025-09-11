@@ -4,6 +4,7 @@ import { MeshObject } from "../MeshObject";
 import type { Player } from "../../types";
 
 type PlayerBodyProps = {
+  playerId: string
   position: [number, number, number];
   color?: string;
   rotation?: Player["rotation"];
@@ -21,7 +22,7 @@ export const PlayerBody = forwardRef(function PlayerBody(
         ref={ref}
         position={props.position}
         quaternion={props.rotation ?? undefined}
-        userData={{ componentType: "Player" }}
+        userData={{ componentType: "Player", id: props.playerId }}
       >
         <boxGeometry args={[1, 1.5, 0.5]} />
         <meshStandardMaterial color={props.color} />
