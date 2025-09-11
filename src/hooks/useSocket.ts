@@ -76,7 +76,7 @@ export const useSocket = (roomId?: string) => {
       socket.off("world-data", handleWorldData);
       socket.off("player-data", handlePlayersData);
     };
-  }, [roomId]);
+  }, [roomId, setRoom]);
 
   return { socket: socketRef.current, room: currentRoom, worldObjects };
 };
