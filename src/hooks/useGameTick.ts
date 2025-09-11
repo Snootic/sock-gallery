@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useUpdateGame } from "./updateGame";
 
-export const useGameTick = () => {
+export const useGameTick = (host: boolean) => {
   const TICK_RATE = 20 ;
   const TICK_INTERVAL = 1000 / TICK_RATE;
 
@@ -13,16 +13,10 @@ export const useGameTick = () => {
   }, [updateGame]);
 
   useEffect(() => {
-    let lastTick = Date.now();
-
     const intervalId = setInterval(() => {
-      const now = Date.now();
-      const delta = (now - lastTick) / TICK_RATE;
-      lastTick = now;
-
-      updateGameRef.current(delta);
+      updateGameRef.current(host);
     }, TICK_INTERVAL);
 
     return () => clearInterval(intervalId);
-  }, [TICK_INTERVAL]);
+  }, [TICK_INTERVAL, host]);
 };

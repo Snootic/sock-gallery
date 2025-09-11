@@ -34,26 +34,55 @@ export const useUpdateGame = () => {
     }
   }, [socket, meshesRef]);
 
+  const sendGuestData = useCallback(() => {
+    if (!socket) return;
+    const updatedMeshes = meshesRef.current.filter((mesh) => {
+      if (!mesh.uuid) return false;
+      if (mesh.userData?.id === undefined) return false;
+      const prev = prevStateRef.current.get(mesh.uuid);
+      const curr = mesh.toJSON();
+      prevStateRef.current.set(mesh.uuid, curr);
+      return !prev || JSON.stringify(prev) !== JSON.stringify(curr);
+    });
+
+    if (updatedMeshes.length < 1) {
+      return
+    }
+
+    const worldObjects = updatedMeshes.map((mesh) => mesh.toJSON());
+    const playerObjects = worldObjects.filter(
+      obj => obj.object &&
+      obj.object.userData &&
+      obj.object.userData.componentType === "Player" &&
+      obj.object.userData.id === socket.id
+    );
+
+    if (playerObjects.length > 0) {
+      socket.emit("player-data", playerObjects)
+    }
+  }, [socket, meshesRef])
+
   return useCallback(
-    (delta: number) => {
+    (host: boolean) => {
       
-      const prevPlayers = prevStateRef.current.get("players") as Record<string, unknown> | undefined;
-      const currPlayers = currentRoom?.players ?? {};
-
-      const newPlayerExists = Object.keys(currPlayers).some(
-        (playerId) => !prevPlayers || !(playerId in prevPlayers)
-      );
-
-      prevStateRef.current.set("players", { ...currPlayers });
-
-      if (newPlayerExists) {
-        sendAllWorldData();
-        console.log('sent all', delta)
+      if(host) {
+        const prevPlayers = prevStateRef.current.get("players") as Record<string, unknown> | undefined;
+        const currPlayers = currentRoom?.players ?? {};
+  
+        const newPlayerExists = Object.keys(currPlayers).some(
+          (playerId) => !prevPlayers || !(playerId in prevPlayers)
+        );
+  
+        prevStateRef.current.set("players", { ...currPlayers });
+  
+        if (newPlayerExists) {
+          sendAllWorldData();
+        } else {
+          sendUpdatedWorldData();
+        }
       } else {
-        console.log('sent updated only')
-        sendUpdatedWorldData();
+        sendGuestData()
       }
-
     },
     [sendUpdatedWorldData, sendAllWorldData, currentRoom]
   );
