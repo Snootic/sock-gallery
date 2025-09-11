@@ -15,7 +15,7 @@ io.init()
 app.use(cors())
 
 app.get('/rooms', async (_req, res) => {
-  const rooms = await roomService.getAllRooms()
+  const rooms = await roomService.getAll()
   res.json(rooms);
 });
 

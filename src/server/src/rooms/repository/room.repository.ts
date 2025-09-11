@@ -10,6 +10,9 @@ export class RoomRepository {
 
   async getAll(): Promise<Room[]> {
     const keys = await this.client.keys("*");
+    if (keys.length === 0) {
+      return [];
+    }
     const rooms = await this.client.mget(...keys);
     return rooms
       .filter((room) => room !== null)
