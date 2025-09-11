@@ -1,6 +1,6 @@
 import { SpotLight } from "@react-three/drei";
 import React from "react";
-import { Shape, Vector3 } from "three";
+import { Vector3 } from "three";
 import { MeshObject } from "../MeshObject";
 
 type LampProps = {
@@ -18,7 +18,7 @@ export const Lamp: React.FC<LampProps> = ({ position }) => {
         <cylinderGeometry args={[0.05, 0.195, 0.4]} />
         <meshBasicMaterial color={"blue"} />
         <MeshObject
-          position={[posArr[0], posArr[1] - 5, posArr[2]]}
+          position={[0, posArr[1] - 5, 0]}
           rotation={[Math.PI, 0, 0]}
         >
           <sphereGeometry
