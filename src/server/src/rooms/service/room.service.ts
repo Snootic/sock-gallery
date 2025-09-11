@@ -10,7 +10,7 @@ export class RoomService {
   }
 
   async getAll() {
-    await this.repository.getAll();
+    return await this.repository.getAll();
   }
 
   async createRoom(roomName: string, host: Socket) {
@@ -40,11 +40,7 @@ export class RoomService {
   async getRoom(roomId: string): Promise<Room | null> {
     return await this.repository.getById(roomId);
   }
-
-  async getAllRooms(): Promise<Room[]> {
-    return this.repository.getAll()
-  }
-
+  
   async setPlayer(player: Player, room: Room) {
     room.players.push(player)
 
