@@ -1,47 +1,47 @@
 import { useCallback, useRef } from "react";
 import { useSocketContext } from "./socketProvider";
-import { useMeshes } from "./useMeshes";
+import { useMeshesData } from "./useMeshes";
 import type { WorldObject } from "../types";
 import { useRooms } from "./useRooms";
+import type { Socket } from "socket.io-client";
 
 export const useUpdateGame = () => {
-  const meshesRef = useMeshes();
+  const meshesData = useMeshesData();
   const { socket } = useSocketContext();
   const {room: [currentRoom]} = useRooms();
   const prevStateRef = useRef(new Map<string, unknown>());
 
-  const sendAllWorldData = useCallback(() => {
+  const sendAllWorldData = (socket: Socket, meshesData: WorldObject[]) => {
     if (!socket) return;
-    const worldObjects = meshesRef.current.map((mesh) => mesh.toJSON());
+    const worldObjects = meshesData;
     if (worldObjects.length > 0) {
       socket.emit("world-data", worldObjects);
     }
-  }, [socket, meshesRef]);
+  };
 
-  const sendUpdatedWorldData = useCallback(() => {
+  const sendUpdatedWorldData = (socket: Socket, meshesData: WorldObject[], prevStateRef: React.RefObject<Map<string, unknown>>) => {
     if (!socket) return;
 
-    const updatedMeshes = meshesRef.current.filter((mesh) => {
-      const prev = prevStateRef.current.get(mesh.uuid);
-      const curr = mesh.toJSON();
-      prevStateRef.current.set(mesh.uuid, curr);
+    const updatedMeshes = meshesData.filter((mesh) => {
+      const prev = prevStateRef.current.get(mesh.object.uuid);
+      const curr = mesh;
+      prevStateRef.current.set(mesh.object.uuid, curr);
       return !prev || JSON.stringify(prev) !== JSON.stringify(curr);
     });
 
     if (updatedMeshes.length > 0) {
-      const worldObjects: WorldObject[] = updatedMeshes.map((mesh) => mesh.toJSON());
+      const worldObjects: WorldObject[] = updatedMeshes;
       socket.emit("world-data", worldObjects);
     }
-  }, [socket, meshesRef]);
+  };
 
-  const sendGuestData = useCallback(() => {
-    if (!socket) return;
-    const updatedMeshes = meshesRef.current.filter((mesh) => {
-      if (!mesh.uuid) return false;
-      if (mesh.userData?.id === undefined) return false;
-      const prev = prevStateRef.current.get(mesh.uuid);
-      const curr = mesh.toJSON();
-      prevStateRef.current.set(mesh.uuid, curr);
+  const sendGuestData = (socket: Socket, meshesData: WorldObject[], prevStateRef: React.RefObject<Map<string, unknown>>) => {
+    const updatedMeshes = meshesData.filter((mesh) => {
+      if (!mesh.object.uuid) return false;
+      if (mesh.object.userData?.id === undefined) return false;
+      const prev = prevStateRef.current.get(mesh.object.uuid);
+      const curr = mesh;
+      prevStateRef.current.set(mesh.object.uuid, curr);
       return !prev || JSON.stringify(prev) !== JSON.stringify(curr);
     });
 
@@ -49,7 +49,7 @@ export const useUpdateGame = () => {
       return
     }
 
-    const worldObjects = updatedMeshes.map((mesh) => mesh.toJSON());
+    const worldObjects = updatedMeshes
     const playerObjects = worldObjects.filter(
       obj => obj.object &&
       obj.object.userData &&
@@ -60,11 +60,12 @@ export const useUpdateGame = () => {
     if (playerObjects.length > 0) {
       socket.emit("player-data", playerObjects)
     }
-  }, [socket, meshesRef])
+  }
 
   return useCallback(
     (host: boolean) => {
-      
+      if (!socket) return;
+
       if(host) {
         const prevPlayers = prevStateRef.current.get("players") as Record<string, unknown> | undefined;
         const currPlayers = currentRoom?.players ?? {};
@@ -76,14 +77,14 @@ export const useUpdateGame = () => {
         prevStateRef.current.set("players", { ...currPlayers });
   
         if (newPlayerExists) {
-          sendAllWorldData();
+          sendAllWorldData(socket, meshesData);
         } else {
-          sendUpdatedWorldData();
+          sendUpdatedWorldData(socket, meshesData, prevStateRef);
         }
       } else {
-        sendGuestData()
+        sendGuestData(socket, meshesData, prevStateRef)
       }
     },
-    [sendUpdatedWorldData, sendAllWorldData, currentRoom]
+    [socket, meshesData, currentRoom]
   );
 };
