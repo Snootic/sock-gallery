@@ -2,10 +2,16 @@ import { Frame, Lamp } from "../../components/blocks";
 import { useGameTick } from "../../hooks/useGameTick";
 import { Player, MeshObject } from "../../components";
 import { useSocketContext } from "../../hooks/socketProvider";
+import { LoadedObject } from "../../components";
+import { useEffect, useState } from "react";
+import type { WorldObject } from "../../types";
+import { mergeWorldObjects } from "../../hooks/mergeWorldObjects";
 
 export const HostScene = () => {
   const { socket, worldObjects } = useSocketContext();
-  useGameTick();
+  const [mergedObjects, setMergedObjects] = useState<WorldObject[]>([]);
+  
+  useGameTick(true);
   const sceneBox = [
     {
       // chao
@@ -47,6 +53,10 @@ export const HostScene = () => {
     },
   ];
 
+  useEffect(() => {
+    setMergedObjects((prev) => mergeWorldObjects(prev, worldObjects));
+  }, [worldObjects]);
+
   return (
     <>
       <group name={"scene-box"}>
@@ -63,14 +73,22 @@ export const HostScene = () => {
       </group>
       <ambientLight intensity={0.5} />
       <Lamp position={[0, 4.8, 0]} />
-      <Lamp position={[0, 4.8, 0]} />
+      <Lamp position={[0, 4.8, 20]} />
+      <Lamp position={[20, 4.8, -20]} />
+      <Lamp position={[20, 4.8, 0]} />
+      <Lamp position={[20, 4.8, -20]} />
+      <Lamp position={[20, 4.8, 20]} />
+      <Lamp position={[-20, 4.8, 0]} />
+      <Lamp position={[-20, 4.8, 20]} />
+      <Lamp position={[-20, 4.8, -20]} />
       {socket?.id && (
         <Player id={socket.id as string} position={[0, 0, 0]} socket={socket} />
       )}
 
-      {worldObjects
-        .filter((wo) => wo.uuid !== socket?.id)
-        .map((wo) => console.log(wo))}
+      {mergedObjects.map((wo) => (
+        <LoadedObject key={wo.object.uuid} objectData={wo} />
+      ))}
+
       <Frame color={"blue"} position={[0, 0.5, 0]} />
     </>
   );
