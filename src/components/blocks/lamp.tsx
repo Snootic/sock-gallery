@@ -1,4 +1,4 @@
-import { SpotLight } from "@react-three/drei";
+import { SpotLight, useTexture } from "@react-three/drei";
 import React, { useMemo } from "react";
 import { Vector3, Object3D } from "three";
 import { MeshObject } from "../MeshObject";
@@ -18,13 +18,21 @@ export const Lamp: React.FC<LampProps> = ({ position }) => {
     return t;
   }, [posArr]);
 
+  const lampTextures = useTexture({
+    map: "/src/assets/textures/lamp/blue_metal_plate_diff_1k.jpg",
+    aoMap: "/src/assets/textures/lamp/blue_metal_plate_arm_1k.jpg",
+    roughnessMap: "/src/assets/textures/lamp/blue_metal_plate_arm_1k.jpg",
+    metalnessMap: "/src/assets/textures/lamp/blue_metal_plate_arm_1k.jpg",
+    normalMap: "/src/assets/textures/lamp/blue_metal_plate_nor_gl_1k.jpg",
+  })
+
   return (
     <group name="lamp">
       <primitive object={target} />
       <MeshObject position={posArr} userData={{ componentType: "Lamp" }}>
         <cylinderGeometry args={[0.05, 0.195, 0.4]} />
-        <meshBasicMaterial color={"blue"} />
-        <MeshObject
+        <meshStandardMaterial {...lampTextures}/>
+        <mesh
           position={[0, -0.2, 0]}
           rotation={[Math.PI, 0, 0]}
         >
@@ -38,7 +46,7 @@ export const Lamp: React.FC<LampProps> = ({ position }) => {
             position={[0, 0, 0]}
             radiusTop={0.2}
             radiusBottom={10}
-            angle={Math.atan(80 / 5)}
+            angle={Math.atan(10 / 5)}
             distance={70}
             intensity={0.5}
             decay={0}
@@ -49,7 +57,7 @@ export const Lamp: React.FC<LampProps> = ({ position }) => {
             shadow-camera-near={1}
             shadow-camera-far={5}
           />
-        </MeshObject>
+        </mesh>
       </MeshObject>
     </group>
   );
