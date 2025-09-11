@@ -1,6 +1,6 @@
 import { SpotLight } from "@react-three/drei";
-import React from "react";
-import { Vector3 } from "three";
+import React, { useMemo } from "react";
+import { Vector3, Object3D } from "three";
 import { MeshObject } from "../MeshObject";
 
 type LampProps = {
@@ -12,13 +12,20 @@ export const Lamp: React.FC<LampProps> = ({ position }) => {
     ? position
     : [position.x, position.y, position.z];
 
+  const target = useMemo(() => {
+    const t = new Object3D();
+    t.position.set(posArr[0], posArr[1] - 5, posArr[2]);
+    return t;
+  }, [posArr]);
+
   return (
     <group name="lamp">
+      <primitive object={target} />
       <MeshObject position={posArr} userData={{ componentType: "Lamp" }}>
         <cylinderGeometry args={[0.05, 0.195, 0.4]} />
         <meshBasicMaterial color={"blue"} />
         <MeshObject
-          position={[0, posArr[1] - 5, 0]}
+          position={[0, -0.2, 0]}
           rotation={[Math.PI, 0, 0]}
         >
           <sphereGeometry
@@ -26,13 +33,14 @@ export const Lamp: React.FC<LampProps> = ({ position }) => {
           />
           <meshStandardMaterial emissive="white" emissiveIntensity={20} />
           <SpotLight
+            target={target}
             castShadow
             position={[0, 0, 0]}
             radiusTop={0.2}
             radiusBottom={10}
             angle={Math.atan(80 / 5)}
             distance={70}
-            intensity={3}
+            intensity={0.5}
             decay={0}
             penumbra={1}
             volumetric
