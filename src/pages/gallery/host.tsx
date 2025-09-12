@@ -14,7 +14,7 @@ import { pictures } from "../../constants/pictures";
 export const HostScene = () => {
   const { socket, worldObjects } = useSocketContext();
   const [mergedObjects, setMergedObjects] = useState<WorldObject[]>([]);
-  useGameTick(true);
+  // useGameTick(true);
 
   const floorTexture = useTexture(floorTexturePaths);
   const wallTexture = useTexture(wallTexturePaths);
@@ -67,28 +67,28 @@ export const HostScene = () => {
   return (
     <>
       <group name={"scene-box"}>
-        {sceneBox.map((props, idx) => (
-          <MeshObject
-            key={idx}
-            rotation={props.rotation as [number, number, number]}
-            position={props.position as [number, number, number]}
-            receiveShadow
-          >
-            <planeGeometry args={[props.geometry[0], props.geometry[1]]}/>
-            <meshStandardMaterial
-            {...props.texture}
-            />
-            {props.texture?.map && (
-            <primitive
-              object={props.texture.map}
-              attach="map"
-              repeat={[props.geometry[0] / 8, props.geometry[1] / 8]}
-              wrapS={RepeatWrapping}
-              wrapT={RepeatWrapping}
-            />
-            )}
-          </MeshObject>
-        ))}
+      {sceneBox.map((props, idx) => (
+        <MeshObject
+        key={idx}
+        rotation={props.rotation as [number, number, number]}
+        position={props.position as [number, number, number]}
+        receiveShadow
+        >
+        <planeGeometry args={[props.geometry[0], props.geometry[1]]}/>
+        <meshStandardMaterial
+        {...props.texture}
+        />
+        {props.texture?.map && (
+        <primitive
+          object={props.texture.map}
+          attach="map"
+          repeat={[props.geometry[0] / 8, props.geometry[1] / 8]}
+          wrapS={RepeatWrapping}
+          wrapT={RepeatWrapping}
+        />
+        )}
+        </MeshObject>
+      ))}
       </group>
       <ambientLight intensity={0.5} />
       <Lamp position={[0, 2.8, 0]} />
@@ -101,14 +101,28 @@ export const HostScene = () => {
       <Lamp position={[-20, 4.8, 20]} />
       <Lamp position={[-20, 4.8, -20]} /> */}
       {socket?.id && (
-        <Player id={socket.id as string} position={[0, 0, 0]} socket={socket} />
+      <Player id={socket.id as string} position={[0, 0, 0]} socket={socket} />
       )}
 
       {mergedObjects.map((wo) => (
-        <LoadedObject key={wo.object.uuid} objectData={wo} />
+      <LoadedObject key={wo.object.uuid} objectData={wo} />
       ))}
 
-      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(0, 1, -10)} />
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(0, 1, -9.9)} rotation={[0, 0, 0]}/>
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(5, 1, -9.9)} rotation={[0, 0, 0]}/>
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(-5, 1, -9.9)} rotation={[0, 0, 0]}/>
+
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(0, 1, 9.9)} rotation={[0, Math.PI, 0]}/>
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(5, 1, 9.9)} rotation={[0, Math.PI, 0]}/>
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(-5, 1, 9.9)} rotation={[0, Math.PI, 0]}/>
+
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(-9.9, 1, 0)} rotation={[0, Math.PI / 2, 0]}/>
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(-9.9, 1, 5)} rotation={[0, Math.PI / 2, 0]}/>
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(-9.9, 1, -5)} rotation={[0, Math.PI / 2, 0]}/>
+
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(9.9, 1, 0)} rotation={[0, -Math.PI / 2, 0]}/>
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(9.9, 1, 5)} rotation={[0, -Math.PI / 2, 0]}/>
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(9.9, 1, -5)} rotation={[0, -Math.PI / 2, 0]}/>
     </>
   );  
 };

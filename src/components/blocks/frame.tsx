@@ -23,85 +23,76 @@ export const Frame: React.FC<FrameProps> = (props) => {
   return (
     <group name="frame">
       <MeshObject
-        position={[
-          props.position!.x,
-          props.position!.y,
-          props.position!.z - 0.1,
-        ]}
-        userData={{ componentType: "framepicture" }}
+      position={[
+        props.position?.x ?? 0,
+        props.position?.y ?? 0,
+        (props.position?.z ?? 0) - 0.1,
+      ]}
+      rotation={props.rotation}
+      userData={{ componentType: "framepicture" }}
       >
-        <boxGeometry args={[0.7, 1, 0.01]} />
-        <meshLambertMaterial {...frameTexture} />
-      </MeshObject>
-      <MeshObject
-        position={[
-          props.position!.x,
-          props.position!.y,
-          props.position!.z + 0.05,
-        ]}
-        userData={{ componentType: "Frameback" }}
+      {/* Frame front */}
+      <mesh
+        position={[0, 0, 0.06]}
+        userData={{ componentType: "FrameFront" }}
         onPointerOver={(e) => {
-          e.stopPropagation();
-          setIsHovered(true);
+        e.stopPropagation();
+        setIsHovered(true);
         }}
-        onPointerOut={() => setIsHovered(false)}
+        onPointerOut={(e) => {
+        e.stopPropagation();
+        setIsHovered(false);
+        }}
       >
-        <boxGeometry args={[0.7, 1, 0.1]} />
-        <meshLambertMaterial map={useTexture(props.picturePath!)} transparent={true} opacity={0.99}/>
+        <boxGeometry args={[0.68, 0.98, 0.01]} />
+        <meshLambertMaterial map={useTexture(props.picturePath!)} transparent opacity={isHovered ? 0.8 : 0.99} />
         {isHovered && (
-          <Html center>
-            <Box sx={{ bgcolor: "white", p: 1, borderRadius: 1, boxShadow: 2, zIndex: 2000, width: "500px", mt: 2 }}>
-              <Box sx={{ width: '100%' }}>
-                {props.about}
-              </Box>
-            </Box>
-          </Html>
+        <Html center>
+          <Box sx={{ bgcolor: "white", p: 2, borderRadius: 2, boxShadow: 4, zIndex: 2000, width: 400, mt: 70 }}>
+          <Box sx={{ width: '100%' }}>
+            {props.about}
+          </Box>
+          </Box>
+        </Html>
         )}
-          
-      </MeshObject>
-      <MeshObject
-        position={[
-          props.position!.x - 0.35,
-          props.position!.y,
-          props.position!.z,
-        ]}
+      </mesh>
+      {/* Frame back */}
+      <mesh
+        position={[0, 0, 0]}
+        userData={{ componentType: "FrameBack" }}
+      >
+        <boxGeometry args={[0.7, 1, 0.08]} />
+        <meshLambertMaterial {...frameTexture} />
+      </mesh>
+      {/* Borders */}
+      <mesh
+        position={[-0.35, 0, 0.04]}
         userData={{ componentType: "FrameBorderLeft" }}
       >
-        <boxGeometry args={[0.05, 1, 0.2]} />
+        <boxGeometry args={[0.05, 1, 0.16]} />
         <meshLambertMaterial {...frameTexture} />
-      </MeshObject>
-      <MeshObject
-        position={[
-          props.position!.x + 0.35,
-          props.position!.y,
-          props.position!.z,
-        ]}
+      </mesh>
+      <mesh
+        position={[0.35, 0, 0.04]}
         userData={{ componentType: "FrameBorderRight" }}
       >
-        <boxGeometry args={[0.05, 1, 0.2]} />
+        <boxGeometry args={[0.05, 1, 0.16]} />
         <meshLambertMaterial {...frameTexture} />
-      </MeshObject>
-      <MeshObject
-        position={[
-          props.position!.x,
-          props.position!.y + 0.5,
-          props.position!.z,
-        ]}
+      </mesh>
+      <mesh
+        position={[0, 0.5, 0.04]}
         userData={{ componentType: "FrameBorderTop" }}
       >
-        <boxGeometry args={[0.7, 0.05, 0.2]} />
+        <boxGeometry args={[0.7, 0.05, 0.16]} />
         <meshLambertMaterial {...frameTexture} />
-      </MeshObject>
-      <MeshObject
-        position={[
-          props.position!.x,
-          props.position!.y - 0.5,
-          props.position!.z,
-        ]}
+      </mesh>
+      <mesh
+        position={[0, -0.5, 0.04]}
         userData={{ componentType: "FrameBorderBottom" }}
       >
-        <boxGeometry args={[0.7, 0.05, 0.2]} />
+        <boxGeometry args={[0.7, 0.05, 0.16]} />
         <meshLambertMaterial {...frameTexture} />
+      </mesh>
       </MeshObject>
     </group>
   );
