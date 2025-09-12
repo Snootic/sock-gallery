@@ -5,16 +5,17 @@ import { MeshObject } from "../MeshObject";
 
 type LampProps = {
   position: [number, number, number] | Vector3;
+  target: Vector3;
 };
 
-export const Lamp: React.FC<LampProps> = ({ position }) => {
-  const posArr: [number, number, number] = Array.isArray(position)
-    ? position
-    : [position.x, position.y, position.z];
+export const Lamp: React.FC<LampProps> = (props) => {
+  const posArr: [number, number, number] = Array.isArray(props.position)
+    ? props.position
+    : [props.position.x, props.position.y, props.position.z];
 
   const target = useMemo(() => {
     const t = new Object3D();
-    t.position.set(posArr[0], posArr[1] - 5, posArr[2]);
+    t.position.copy(props.target);
     return t;
   }, [posArr]);
 
@@ -28,7 +29,7 @@ export const Lamp: React.FC<LampProps> = ({ position }) => {
 
   return (
     <group name="lamp">
-      <primitive object={target} />
+      <primitive object={props.target} />
       <MeshObject position={posArr} userData={{ componentType: "Lamp" }}>
         <cylinderGeometry args={[0.05, 0.195, 0.4]} />
         <meshStandardMaterial {...lampTextures}/>
