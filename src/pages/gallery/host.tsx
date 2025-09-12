@@ -9,6 +9,7 @@ import { mergeWorldObjects } from "../../hooks/mergeWorldObjects";
 import { useTexture } from "@react-three/drei";
 import { RepeatWrapping, Vector3 } from "three";
 import { floorTexturePaths, wallTexturePaths } from "../../constants/textures";
+import { pictures } from "../../constants/pictures";
 
 export const HostScene = () => {
   const { socket, worldObjects } = useSocketContext();
@@ -23,38 +24,38 @@ export const HostScene = () => {
       // chao
       rotation: [-Math.PI / 2, 0, 0],
       position: [0, -0.5, 0],
-      geometry: [50, 50],
+      geometry: [20, 20],
       texture: floorTexture
     },
     {
       //teto
       rotation: [Math.PI / 2, 0, 0],
-      position: [0, 5, 0],
-      geometry: [50, 50],
+      position: [0, 3, 0],
+      geometry: [20, 20],
       texture: wallTexture
     },
     {
       rotation: [0, -Math.PI / 2, 0],
-      position: [25, 2, 0],
-      geometry: [50, 12],
+      position: [10, 2, 0],
+      geometry: [20, 12],
       texture: wallTexture
     },
     {
       rotation: [0, Math.PI / 2, 0],
-      position: [-25, 2, 0],
-      geometry: [50, 12],
+      position: [-10, 2, 0],
+      geometry: [20, 12],
       texture: wallTexture
     },
     {
       rotation: [0, Math.PI, 0],
-      position: [0, 2, 25],
-      geometry: [50, 12],
+      position: [0, 2, 10],
+      geometry: [20, 12],
       texture: wallTexture
     },
     {
       rotation: [0, 0, Math.PI],
-      position: [0, 2, -25],
-      geometry: [50, 12],
+      position: [0, 2, -10],
+      geometry: [20, 12],
       texture: wallTexture
     },
   ], [floorTexture, wallTexture]);
@@ -90,7 +91,7 @@ export const HostScene = () => {
         ))}
       </group>
       <ambientLight intensity={0.5} />
-      <Lamp position={[0, 4.8, 0]} />
+      <Lamp position={[0, 2.8, 0]} />
       {/* <Lamp position={[0, 4.8, 20]} />
       <Lamp position={[20, 4.8, -20]} />
       <Lamp position={[20, 4.8, 0]} />
@@ -107,7 +108,7 @@ export const HostScene = () => {
         <LoadedObject key={wo.object.uuid} objectData={wo} />
       ))}
 
-      <Frame picturePath={"/src/assets/monalisa.jpg"} position={new Vector3(0, 1, 0)} />
+      <Frame picturePath={pictures.monalisa.path} about={pictures.monalisa.about} position={new Vector3(0, 1, -10)} />
     </>
   );  
 };

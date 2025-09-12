@@ -7,6 +7,7 @@ import { useState } from "react";
 
 interface FrameProps extends Partial<Mesh> {
   picturePath: string;
+  about: string;
 }
 
 export const Frame: React.FC<FrameProps> = (props) => {
@@ -39,33 +40,25 @@ export const Frame: React.FC<FrameProps> = (props) => {
           props.position!.z + 0.05,
         ]}
         userData={{ componentType: "Frameback" }}
-      >
-        <boxGeometry args={[0.7, 1, 0.1]} />
-        <meshLambertMaterial map={useTexture(props.picturePath!)} />
-      </MeshObject>
-      <mesh
-        position={[
-          props.position!.x,
-          props.position!.y + 0.7,
-          props.position!.z,
-        ]}
         onPointerOver={(e) => {
           e.stopPropagation();
           setIsHovered(true);
-          console.log("hihi hehe")
         }}
         onPointerOut={() => setIsHovered(false)}
       >
-        <boxGeometry args={[0.8, 0.2, 0.05]} />
-        <meshBasicMaterial transparent opacity={0} />
+        <boxGeometry args={[0.7, 1, 0.1]} />
+        <meshLambertMaterial map={useTexture(props.picturePath!)} transparent={true} opacity={0.99}/>
         {isHovered && (
           <Html center>
-            <Box sx={{ bgcolor: "white", p: 1, borderRadius: 1, boxShadow: 2, zIndex: 2000 }}>
-              <span>{props.picturePath}</span>
+            <Box sx={{ bgcolor: "white", p: 1, borderRadius: 1, boxShadow: 2, zIndex: 2000, width: "500px", mt: 2 }}>
+              <Box sx={{ width: '100%' }}>
+                {props.about}
+              </Box>
             </Box>
           </Html>
         )}
-      </mesh>
+          
+      </MeshObject>
       <MeshObject
         position={[
           props.position!.x - 0.35,
