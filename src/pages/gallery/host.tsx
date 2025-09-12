@@ -11,6 +11,81 @@ import { RepeatWrapping, Vector3 } from "three";
 import { floorTexturePaths, wallTexturePaths } from "../../constants/textures";
 import { pictures } from "../../constants/pictures";
 
+const galleryItems = [
+  {
+    position: new Vector3(0, 1, -9.9),
+    rotation: [0, 0, 0],
+    lampOffset: new Vector3(0, 1.8, 1.9),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(5, 1, -9.9),
+    rotation: [0, 0, 0],
+    lampOffset: new Vector3(0, 1.8, 1.9),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(-5, 1, -9.9),
+    rotation: [0, 0, 0],
+    lampOffset: new Vector3(0, 1.8, 1.9),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(0, 1, 9.9),
+    rotation: [0, Math.PI, 0],
+    lampOffset: new Vector3(0, 1.8, -1.9),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(5, 1, 9.9),
+    rotation: [0, Math.PI, 0],
+    lampOffset: new Vector3(0, 1.8, -1.9),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(-5, 1, 9.9),
+    rotation: [0, Math.PI, 0],
+    lampOffset: new Vector3(0, 1.8, -1.9),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(-9.9, 1, 0),
+    rotation: [0, Math.PI / 2, 0],
+    lampOffset: new Vector3(1.9, 1.8, 0),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(-9.9, 1, 5),
+    rotation: [0, Math.PI / 2, 0],
+    lampOffset: new Vector3(1.9, 1.8, 0),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(-9.9, 1, -5),
+    rotation: [0, Math.PI / 2, 0],
+    lampOffset: new Vector3(1.9, 1.8, 0),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(9.9, 1, 0),
+    rotation: [0, -Math.PI / 2, 0],
+    lampOffset: new Vector3(-1.9, 1.8, 0),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(9.9, 1, 5),
+    rotation: [0, -Math.PI / 2, 0],
+    lampOffset: new Vector3(-1.9, 1.8, 0),
+    picture: pictures.monalisa,
+  },
+  {
+    position: new Vector3(9.9, 1, -5),
+    rotation: [0, -Math.PI / 2, 0],
+    lampOffset: new Vector3(-1.9, 1.8, 0),
+    picture: pictures.monalisa,
+  },
+];
+
 export const HostScene = () => {
   const { socket, worldObjects } = useSocketContext();
   const [mergedObjects, setMergedObjects] = useState<WorldObject[]>([]);
@@ -19,46 +94,49 @@ export const HostScene = () => {
   const floorTexture = useTexture(floorTexturePaths);
   const wallTexture = useTexture(wallTexturePaths);
 
-  const sceneBox = useMemo(() => [
-    {
-      // chao
-      rotation: [-Math.PI / 2, 0, 0],
-      position: [0, -0.5, 0],
-      geometry: [20, 20],
-      texture: floorTexture
-    },
-    {
-      //teto
-      rotation: [Math.PI / 2, 0, 0],
-      position: [0, 3, 0],
-      geometry: [20, 20],
-      texture: wallTexture
-    },
-    {
-      rotation: [0, -Math.PI / 2, 0],
-      position: [10, 2, 0],
-      geometry: [20, 12],
-      texture: wallTexture
-    },
-    {
-      rotation: [0, Math.PI / 2, 0],
-      position: [-10, 2, 0],
-      geometry: [20, 12],
-      texture: wallTexture
-    },
-    {
-      rotation: [0, Math.PI, 0],
-      position: [0, 2, 10],
-      geometry: [20, 12],
-      texture: wallTexture
-    },
-    {
-      rotation: [0, 0, Math.PI],
-      position: [0, 2, -10],
-      geometry: [20, 12],
-      texture: wallTexture
-    },
-  ], [floorTexture, wallTexture]);
+  const sceneBox = useMemo(
+    () => [
+      {
+        // chao
+        rotation: [-Math.PI / 2, 0, 0],
+        position: [0, -0.5, 0],
+        geometry: [20, 20],
+        texture: floorTexture,
+      },
+      {
+        //teto
+        rotation: [Math.PI / 2, 0, 0],
+        position: [0, 3, 0],
+        geometry: [20, 20],
+        texture: wallTexture,
+      },
+      {
+        rotation: [0, -Math.PI / 2, 0],
+        position: [10, 2, 0],
+        geometry: [20, 12],
+        texture: wallTexture,
+      },
+      {
+        rotation: [0, Math.PI / 2, 0],
+        position: [-10, 2, 0],
+        geometry: [20, 12],
+        texture: wallTexture,
+      },
+      {
+        rotation: [0, Math.PI, 0],
+        position: [0, 2, 10],
+        geometry: [20, 12],
+        texture: wallTexture,
+      },
+      {
+        rotation: [0, 0, Math.PI],
+        position: [0, 2, -10],
+        geometry: [20, 12],
+        texture: wallTexture,
+      },  
+    ],
+    [floorTexture, wallTexture]
+  );
 
   useEffect(() => {
     setMergedObjects((prev) => mergeWorldObjects(prev, worldObjects));
@@ -67,31 +145,29 @@ export const HostScene = () => {
   return (
     <>
       <group name={"scene-box"}>
-      {sceneBox.map((props, idx) => (
-        <MeshObject
-        key={idx}
-        rotation={props.rotation as [number, number, number]}
-        position={props.position as [number, number, number]}
-        receiveShadow
-        >
-        <planeGeometry args={[props.geometry[0], props.geometry[1]]}/>
-        <meshStandardMaterial
-        {...props.texture}
-        />
-        {props.texture?.map && (
-        <primitive
-          object={props.texture.map}
-          attach="map"
-          repeat={[props.geometry[0] / 8, props.geometry[1] / 8]}
-          wrapS={RepeatWrapping}
-          wrapT={RepeatWrapping}
-        />
-        )}
-        </MeshObject>
-      ))}
+        {sceneBox.map((props, idx) => (
+          <MeshObject
+            key={idx}
+            rotation={props.rotation as [number, number, number]}
+            position={props.position as [number, number, number]}
+            receiveShadow
+          >
+            <planeGeometry args={[props.geometry[0], props.geometry[1]]} />
+            <meshStandardMaterial {...props.texture} />
+            {props.texture?.map && (
+              <primitive
+                object={props.texture.map}
+                attach="map"
+                repeat={[props.geometry[0] / 8, props.geometry[1] / 8]}
+                wrapS={RepeatWrapping}
+                wrapT={RepeatWrapping}
+              />
+            )}
+          </MeshObject>
+        ))}
       </group>
-        <ambientLight intensity={0.5} />
-        {socket?.id && (
+      <ambientLight intensity={0.5} />
+      {socket?.id && (
         <Player id={socket.id as string} position={[0, 0, 0]} socket={socket} />
       )}
 
@@ -99,101 +175,20 @@ export const HostScene = () => {
         <LoadedObject key={wo.object.uuid} objectData={wo} />
       ))}
 
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(0, 1, -9.9)}
-        rotation={[0, 0, 0]}
-      />
-      <Lamp position={[0, 2.8, 0]} target={new Vector3(0, 1, -9.9)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(5, 1, -9.9)}
-        rotation={[0, 0, 0]}
-      />
-      <Lamp position={[5, 2.8, -8]} target={new Vector3(5, 1, -9.9)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(-5, 1, -9.9)}
-        rotation={[0, 0, 0]}
-      />
-      <Lamp position={[-5, 2.8, -8]} target={new Vector3(-5, 1, -9.9)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(0, 1, 9.9)}
-        rotation={[0, Math.PI, 0]}
-      />
-      <Lamp position={[0, 2.8, 8]} target={new Vector3(0, 1, 9.9)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(5, 1, 9.9)}
-        rotation={[0, Math.PI, 0]}
-      />
-      <Lamp position={[5, 2.8, 8]} target={new Vector3(5, 1, 9.9)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(-5, 1, 9.9)}
-        rotation={[0, Math.PI, 0]}
-      />
-      <Lamp position={[-5, 2.8, 8]} target={new Vector3(-5, 1, 9.9)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(-9.9, 1, 0)}
-        rotation={[0, Math.PI / 2, 0]}
-      />
-      <Lamp position={[-8, 2.8, 0]} target={new Vector3(-9.9, 1, 0)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(-9.9, 1, 5)}
-        rotation={[0, Math.PI / 2, 0]}
-      />
-      <Lamp position={[-8, 2.8, 5]} target={new Vector3(-9.9, 1, 5)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(-9.9, 1, -5)}
-        rotation={[0, Math.PI / 2, 0]}
-      />
-      <Lamp position={[-8, 2.8, -5]} target={new Vector3(-9.9, 1, -5)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(9.9, 1, 0)}
-        rotation={[0, -Math.PI / 2, 0]}
-      />
-      <Lamp position={[8, 2.8, 0]} target={new Vector3(9.9, 1, 0)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(9.9, 1, 5)}
-        rotation={[0, -Math.PI / 2, 0]}
-      />
-      <Lamp position={[8, 2.8, 5]} target={new Vector3(9.9, 1, 5)} />
-
-      <Frame
-        picturePath={pictures.monalisa.path}
-        about={pictures.monalisa.about}
-        position={new Vector3(9.9, 1, -5)}
-        rotation={[0, -Math.PI / 2, 0]}
-      />
-      <Lamp position={[8, 2.8, -5]} target={new Vector3(9.9, 1, -5)} />
+      {galleryItems.map((item, index) => (
+        <group key={index}>
+          <Frame
+            picturePath={item.picture.path}
+            about={item.picture.about}
+            position={item.position}
+            rotation={item.rotation as [number, number, number]}
+          />
+          <Lamp
+            position={new Vector3().copy(item.position).add(item.lampOffset)}
+            target={item.position}
+          />
+        </group>
+      ))}
     </>
-  );  
+  );
 };
