@@ -35,11 +35,11 @@ export const Frame: React.FC<FrameProps> = (props) => {
       <mesh
         position={[0, 0, 0.06]}
         userData={{ componentType: "FrameFront" }}
-        onPointerOver={(e) => {
-        e.stopPropagation();
-        setIsHovered(true);
+        onPointerEnter={(e) => {
+         e.stopPropagation();
+         setIsHovered(true);
         }}
-        onPointerOut={(e) => {
+        onPointerLeave={(e) => {
         e.stopPropagation();
         setIsHovered(false);
         }}
