@@ -46,7 +46,7 @@ export const Lamp: React.FC<LampProps> = ({ position }) => {
             position={[0, 0, 0]}
             radiusTop={0.2}
             radiusBottom={10}
-            angle={Math.atan(10 / 5)}
+            angle={Math.atan(1 / 3)}
             distance={70}
             intensity={0.5}
             decay={0}
