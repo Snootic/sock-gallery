@@ -5,7 +5,15 @@ export class RoomRepository {
   private client: Redis;
 
   constructor() {
-    this.client = new Redis();
+    if (process.env.NODE_ENV === "production") {
+      this.client = new Redis({
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+        password: process.env.REDIS_PASSWORD,
+      });
+    } else {
+      this.client = new Redis();
+    }
   }
 
   async getAll(): Promise<Room[]> {
