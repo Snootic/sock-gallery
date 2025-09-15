@@ -20,9 +20,15 @@ function Gallery() {
   return (
     <Box component="main">
       <Container sx={styles.ui}>
-        <Box>
-          Current Room: {socketState.room ? socketState.room.id : "..."}
-        </Box>
+          <Box sx={{ fontWeight: "bold" }}>Session Info</Box>
+          <Box>
+            <strong>Room:</strong>{" "}
+            {socketState.room ? socketState.room.id : <span style={{ color: "#888" }}>Loading...</span>}
+          </Box>
+          <Box>
+            <strong>User ID:</strong>{" "}
+            {socketState.socket ? socketState.socket.id : <span style={{ color: "#888" }}>Loading...</span>}
+          </Box>
       </Container>
       <MeshesProvider>
         <SocketContext.Provider value={socketState}>
