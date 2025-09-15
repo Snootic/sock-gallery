@@ -25,7 +25,7 @@ export default function MainMenu() {
       return null;
     }
 
-    navigate(`/gallery/${host || room}`);
+    navigate(`/gallery/${host || room.id}`);
   };
 
   useEffect(() => {
