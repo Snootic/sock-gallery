@@ -30,6 +30,24 @@ function Gallery() {
             {socketState.socket ? socketState.socket.id : <span style={{ color: "#888" }}>Loading...</span>}
           </Box>
       </Container>
+      <Box
+        sx={{
+          width: '10px',
+          height: '10px',
+          border: '2px solid white',
+          borderRadius: '50%',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          pointerEvents: 'none',
+          zIndex: 101,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+      </Box>
       <MeshesProvider>
         <SocketContext.Provider value={socketState}>
           <Canvas

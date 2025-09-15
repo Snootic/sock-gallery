@@ -1,7 +1,7 @@
 import { useThree } from '@react-three/fiber'
 import { useEffect, useRef, forwardRef, type ForwardedRef } from 'react'
 import { PerspectiveCamera as Camera, Quaternion, Vector3 } from 'three';
-import { PerspectiveCamera, Html } from '@react-three/drei';
+import { PerspectiveCamera } from '@react-three/drei';
 
 type CameraPosition = {
   x: number;
@@ -63,22 +63,6 @@ export const PlayerCamera = forwardRef(function PlayerCamera(
       fov={75}
       near={0.1}
       far={1000}
-    >
-      <Html center>
-        <div
-          style={{
-            width: '10px',
-            height: '10px',
-            border: '1px solid white',
-            borderRadius: '50%',
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-          }}
-        />
-      </Html>
-    </PerspectiveCamera> 
+    />
   )
 })
