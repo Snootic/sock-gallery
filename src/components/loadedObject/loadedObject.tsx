@@ -1,61 +1,57 @@
-import { useMemo } from "react";
-import type { WorldObject } from "../../types";
 import * as THREE from 'three'
-import { Frame, Lamp, MeshObject } from '../index'
+import { Frame, Lamp } from '../index'
 import PlayerBody from "../player/body";
+import type { MinimalObjectData } from "../../hooks/useMeshes";
+import { GalleryBox } from '../blocks';
 
-export const LoadedObject = ({ objectData }: { objectData: WorldObject }) => {
-  const obj = useMemo(
-    () => new THREE.ObjectLoader().parse(objectData),
-    [objectData]
-  ) as THREE.Mesh;
+export const LoadedObject = ({ objectData }: { objectData: MinimalObjectData }) => {
+  const position = new THREE.Vector3(...objectData.position);
+  const quarternion = new THREE.Quaternion(...objectData.quarternion);
+  const scale = new THREE.Vector3(...objectData.scale);
 
-  const {
-    uuid,
-    geometry,
-    material,
-    position,
-    quaternion,
-    scale,
-    castShadow,
-    receiveShadow,
-    userData,
-  } = obj;
   const props = {
-    geometry,
-    material,
     position,
-    quaternion,
+    quarternion,
     scale,
-    castShadow,
-    receiveShadow,
-    userData,
+    userData: objectData.userData,
   };
 
-  switch (obj.userData.componentType) {
+  switch (objectData.groupName) {
     case "Frame":
       return (
         <Frame
-          key={uuid}
-          {...(props as React.ComponentProps<typeof Frame>)}
-          color={"blue"}
+          key={objectData.group}
+          picturePath={props.userData.picture}
+          about={props.userData.about}
+          {...props}
         />
       );
     case "Lamp":
       return (
-        <Lamp key={uuid} {...(props as React.ComponentProps<typeof Lamp>)} />
-      );
-    case "Player":
-      const { position: _position, ...playerProps } = props;
-      return (
-        <PlayerBody
-          playerId={obj.userData.id}
-          key={uuid}
-          position={obj.position.toArray()}
-          {...playerProps}
+        <Lamp
+          key={objectData.group}
+          position={position}
+          target={new THREE.Vector3(...objectData.userData.target)}
+          castShadow={objectData.userData.castShadow}
+          volumetric={objectData.userData.volumetric}
         />
       );
+    case "player_body":
+      return (
+        <PlayerBody
+          playerId={objectData.userData.id}
+          key={objectData.group}
+          position={objectData.position}
+          rotation={quarternion}
+        />
+      );
+    case "GalleryBox":
+        return (
+          <GalleryBox/>
+        )
     default:
-      return <MeshObject key={uuid} {...props} />;
+      return (
+        null
+      )
   }
 };

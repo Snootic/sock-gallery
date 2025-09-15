@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import type { Socket } from "socket.io-client";
 import { io } from "socket.io-client";
-import type { Room, WorldObject } from "../types";
+import type { Room } from "../types";
 import { signalingServer } from "../constants/server";
 import { useRooms } from "./useRooms";
+import type { MinimalObjectData } from "./useMeshes";
 
 export const useSocket = (roomId?: string) => {
   const socketRef = useRef<Socket | null>(null);
   const { room: [currentRoom, setRoom] } = useRooms();
-  const [worldObjects, setWorldObjects] = useState<WorldObject[]>([]);
+  const [worldObjects, setWorldObjects] = useState<MinimalObjectData[]>([]);
   const roomJoinedRef = useRef(false);
 
   useEffect(() => {
@@ -51,15 +52,15 @@ export const useSocket = (roomId?: string) => {
       setRoom(room)
     };
 
-    const handleWorldData = (newWorldObjects: WorldObject[]) => {
+    const handleWorldData = (newWorldObjects: MinimalObjectData[]) => {
       setWorldObjects(newWorldObjects);
     };
 
-    const handlePlayersData = (playersData: WorldObject[]) => {
+    const handlePlayersData = (playersData: MinimalObjectData[]) => {
       setWorldObjects((prev) => {
-        const map = new Map(prev.map((obj) => [obj.object.uuid, obj]));
+        const map = new Map(prev.map((obj) => [obj.group, obj]));
         playersData.forEach((obj) => {
-          map.set(obj.object.uuid, obj);
+          map.set(obj.group, obj);
         });
         return Array.from(map.values());
       });

@@ -1,21 +1,38 @@
 import { useContext, useRef, useEffect } from "react";
-import type { Mesh } from "three";
+import type { Mesh, QuaternionTuple, Vector3Tuple } from "three";
 import { MeshesContext } from "../context/meshesContext";
-
 
 export function useMeshes() {
   return useContext(MeshesContext);
 }
 
-export function useMeshesData() {
-  return useContext(MeshesContext).current.map((mesh) => {
-    const json = mesh.toJSON();
-    if ("images" in json) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      delete (json as any).images;
-    }
-    return json;
-  });
+export interface MinimalObjectData {
+  group: string;
+  groupName: string;
+  position: Vector3Tuple;
+  quarternion: QuaternionTuple;
+  scale: Vector3Tuple;
+  userData: Record<string, any>;
+}
+
+export function useMeshesData(): MinimalObjectData[] {
+  const meshes = useContext(MeshesContext).current;
+  const groups = new Set<string>();
+  return meshes
+    .filter((mesh) => {
+      const groupId = mesh.parent!.uuid;
+      if (groups.has(groupId)) return false;
+      groups.add(groupId);
+      return true;
+    })
+    .map((mesh) => ({
+      group: mesh.parent!.uuid,
+      groupName: mesh.parent!.name,
+      position: mesh.position.toArray(),
+      quarternion: mesh.quaternion.toArray(),
+      scale: mesh.scale.toArray(),
+      userData: mesh.userData
+    }));
 }
 
 export function useRegisterMesh() {

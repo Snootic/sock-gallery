@@ -1,11 +1,12 @@
 import { createContext, useContext } from "react";
 import type { Socket } from "socket.io-client";
-import type { Room, WorldObject } from "../types";
+import type { Room } from "../types";
+import type { MinimalObjectData } from "./useMeshes";
 
 export interface SocketContextProps {
   socket: Socket | null;
   room?: Room;
-  worldObjects: WorldObject[];
+  worldObjects: MinimalObjectData[];
 }
 
 export const SocketContext = createContext<SocketContextProps>(null!);

@@ -1,16 +1,13 @@
-import type { WorldObject } from "../types";
+import type { MinimalObjectData } from "./useMeshes";
 
 export function mergeWorldObjects(
-  prev: WorldObject[],
-  updates: WorldObject[]
-): WorldObject[] {
-  const map = new Map(prev.map((obj) => [obj.object.uuid, obj]));
+  prev: MinimalObjectData[],
+  updates: MinimalObjectData[]
+): MinimalObjectData[] {
+  const map = new Map(prev.map((obj) => [obj.group, obj]));
+  
   updates.forEach((obj) => {
-    if (!map.has(obj.object.uuid)) {
-      map.set(obj.object.uuid, obj);
-    } else {
-      map.set(obj.object.uuid, obj);
-    }
+    map.set(obj.group, obj);
   });
 
   return Array.from(map.values());

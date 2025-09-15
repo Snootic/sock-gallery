@@ -21,7 +21,7 @@ export const Frame: React.FC<FrameProps> = (props) => {
   });
 
   return (
-    <group name="frame">
+    <group name="Frame">
       <MeshObject
       position={[
         props.position?.x ?? 0,
@@ -29,9 +29,8 @@ export const Frame: React.FC<FrameProps> = (props) => {
         (props.position?.z ?? 0) - 0.1,
       ]}
       rotation={props.rotation}
-      userData={{ componentType: "framepicture" }}
+      userData={{ componentType: "Frame", picture: props.picturePath, about: props.about }}
       >
-      {/* Frame front */}
       <mesh
         position={[0, 0, 0.06]}
         userData={{ componentType: "FrameFront" }}

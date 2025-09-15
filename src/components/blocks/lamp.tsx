@@ -34,9 +34,9 @@ export const Lamp: React.FC<LampProps> = ({
   });
 
   return (
-    <group name="lamp">
+    <group name="Lamp">
       <primitive object={target} />
-      <MeshObject position={position} userData={{ componentType: "Lamp" }}>
+      <MeshObject position={position} userData={{ componentType: "Lamp", target: target.position.toArray() }}>
         <cylinderGeometry args={[0.05, 0.195, 0.4]} />
         <meshStandardMaterial {...lampTextures} />
         <mesh position={[0, -0.2, 0]} rotation={[Math.PI, 0, 0]}>
