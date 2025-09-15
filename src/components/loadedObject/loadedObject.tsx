@@ -23,7 +23,8 @@ export const LoadedObject = ({ objectData }: { objectData: MinimalObjectData }) 
           key={objectData.group}
           picturePath={props.userData.picture}
           about={props.userData.about}
-          {...props}
+          rotation={new THREE.Euler().setFromQuaternion(quarternion)}
+          position={position}
         />
       );
     case "Lamp":
