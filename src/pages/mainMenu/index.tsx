@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Button, InputBase, Box } from "@mui/material";
 import { GameSelect } from "../../components";
-import type { Room } from "../../types";
 import { useTheme, type Theme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { signalingServer } from "../../constants/server";

@@ -5,8 +5,8 @@ import { useTheme, type Theme } from "@mui/material/styles";
 
 type SelectProps = {
   values: Room[]
-  selectedValue: Room | undefined
-  setSelectedvalue: React.Dispatch<React.SetStateAction<Room | undefined>>
+  selectedValue: Room
+  setSelectedvalue: React.Dispatch<React.SetStateAction<Room>>
 }
 
 export const GameSelect: React.FC<SelectProps> = (props) => {
