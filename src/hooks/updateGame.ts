@@ -62,8 +62,10 @@ export const useUpdateGame = () => {
       return;
     }
 
+    console.log(updatedMeshes)
+
     const playerObjects = updatedMeshes.filter(
-      obj => obj.groupName === "Player" && obj.userData.id === socket.id
+      obj => obj.groupName === "player_body" && obj.userData.id === socket.id
     );
 
     if (playerObjects.length > 0) {
