@@ -29,9 +29,9 @@ export const useUpdateGame = () => {
       if (!prev) return true;
       
       return (
-        prev.position.some((val, i) => Math.abs(val - curr.position[i]) > 0.001) ||
-        prev.quarternion.some((val, i) => Math.abs(val - curr.quarternion[i]) > 0.001) ||
-        prev.scale.some((val, i) => Math.abs(val - curr.scale[i]) > 0.001) ||
+        prev.position.some((val: number, i: number) => Math.abs(val - curr.position[i]) > 0.001) ||
+        prev.quarternion.some((val: number, i: number) => Math.abs(val - curr.quarternion[i]) > 0.001) ||
+        prev.scale.some((val: number, i: number) => Math.abs(val - curr.scale[i]) > 0.001) ||
         JSON.stringify(prev.userData) !== JSON.stringify(curr.userData)
       );
     });
@@ -53,8 +53,8 @@ export const useUpdateGame = () => {
       if (!prev) return true;
       
       return (
-        prev.position.some((val, i) => Math.abs(val - curr.position[i]) > 0.001) ||
-        prev.quarternion.some((val, i) => Math.abs(val - curr.quarternion[i]) > 0.001)
+        prev.position.some((val: number, i: number) => Math.abs(val - curr.position[i]) > 0.001) ||
+        prev.quarternion.some((val: number, i: number) => Math.abs(val - curr.quarternion[i]) > 0.001)
       );
     });
 
