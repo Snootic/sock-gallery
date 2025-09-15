@@ -72,7 +72,10 @@ export const PlayerCamera = forwardRef(function PlayerCamera(
             border: '1px solid white',
             borderRadius: '50%',
             position: 'absolute',
-            transform: 'translate(-50%, -50%)',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
           }}
         />
       </Html>
